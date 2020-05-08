@@ -1,0 +1,63 @@
+variables:
+  MTR_REGISTRY: mtr.external.otc.telekomcloud.com
+  MTR_USER: tif+gitpipeline
+
+  MTR_TARGET_IMAGE: tif/tif-keycloak
+  MTR_TARGET_TAG: $CI_COMMIT_REF_NAME
+
+  MTR_BASE_IMAGE_TAG: '9.0.0'
+
+stages:
+- build
+- publish
+
+.mtr-login: &mtr-login |
+  docker login -u="$MTR_USER" -p="$MTR_TOKEN" $MTR_REGISTRY
+
+.mtr-logout: &mtr-logout |
+  docker logout $MTR_REGISTRY || true
+
+.master-is-latest: &master-is-latest |
+  [[ "$MTR_TARGET_TAG" == "master" ]] && export MTR_TARGET_TAG=latest
+  [[ "$MTR_BASE_IMAGE_TAG" == "master" ]] && export MTR_BASE_IMAGE_TAG=latest
+
+.setup-job-basics: &setup-job-basics
+  tags:
+  - run01_docker
+  before_script:
+  - *master-is-latest
+
+# jobs
+
+build:extensions:
+  extends: .setup-job-basics
+  image: maven
+  stage: build
+  script:
+  - |
+    pushd "$CI_PROJECT_DIR/extensions"
+      ./build.sh
+    popd
+  artifacts:
+    paths:
+    - "$CI_PROJECT_DIR/extensions/"
+  
+build:image:
+  extends: .setup-job-basics
+  image: docker
+  stage: build
+  dependencies:
+  - build:extensions
+  script:
+  - *mtr-login
+  - docker build --no-cache --build-arg BASE_IMAGE_TAG=$MTR_BASE_IMAGE_TAG -t$MTR_REGISTRY/$MTR_TARGET_IMAGE:$MTR_TARGET_TAG .
+  - *mtr-logout
+
+publish:image:
+  extends: .setup-job-basics
+  image: docker
+  stage: publish
+  script:
+  - *mtr-login
+  - docker push $MTR_REGISTRY/$MTR_TARGET_IMAGE:$MTR_TARGET_TAG
+  - *mtr-logout
