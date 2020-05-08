@@ -40,7 +40,7 @@ build:extensions:
   - cd extensions && ./build.sh
   artifacts:
     paths:
-    - "$CI_PROJECT_DIR/extensions/"
+    - "$CI_PROJECT_DIR/providers/"
   
 build:image:
   extends: .setup-job-basics
