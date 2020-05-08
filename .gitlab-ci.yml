@@ -22,11 +22,12 @@ stages:
   [[ "$MTR_TARGET_TAG" == "master" ]] && export MTR_TARGET_TAG=latest
   [[ "$MTR_BASE_IMAGE_TAG" == "master" ]] && export MTR_BASE_IMAGE_TAG=latest
 
+.add_alpine_packages: &add_alpine_packages |
+  apk add --no-cache bash
+
 .setup-job-basics: &setup-job-basics
   tags:
   - run01_docker
-  before_script:
-  - *master-is-latest
 
 # jobs
 
@@ -35,6 +36,7 @@ build:extensions:
   image: openjdk:15-jdk-alpine
   stage: prepare
   script:
+  - *add_alpine_packages
   - |
     pushd "$CI_PROJECT_DIR/extensions"
       ./build.sh
@@ -50,6 +52,7 @@ build:image:
   dependencies:
   - build:extensions
   script:
+  - *master-is-latest
   - *mtr-login
   - docker build --no-cache --build-arg BASE_IMAGE_TAG=$MTR_BASE_IMAGE_TAG -t$MTR_REGISTRY/$MTR_TARGET_IMAGE:$MTR_TARGET_TAG .
   - *mtr-logout
@@ -59,6 +62,7 @@ publish:image:
   image: docker
   stage: publish
   script:
+  - *master-is-latest
   - *mtr-login
   - docker push $MTR_REGISTRY/$MTR_TARGET_IMAGE:$MTR_TARGET_TAG
   - *mtr-logout
