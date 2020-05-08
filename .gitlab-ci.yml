@@ -8,6 +8,7 @@ variables:
   MTR_BASE_IMAGE_TAG: '9.0.0'
 
 stages:
+- prepare
 - build
 - publish
 
@@ -31,8 +32,8 @@ stages:
 
 build:extensions:
   extends: .setup-job-basics
-  image: maven
-  stage: build
+  image: openjdk:15-jdk-alpine
+  stage: prepare
   script:
   - |
     pushd "$CI_PROJECT_DIR/extensions"
