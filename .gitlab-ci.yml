@@ -37,10 +37,7 @@ build:extensions:
   stage: prepare
   script:
   - *add_alpine_packages
-  - |
-    pushd "$CI_PROJECT_DIR/extensions"
-      ./build.sh
-    popd
+  - cd extensions && ./build.sh
   artifacts:
     paths:
     - "$CI_PROJECT_DIR/extensions/"
