@@ -6,3 +6,6 @@ LABEL maintainer="Digital Hub Enterprise Integration (DHEI)"
 LABEL description="joboss/keycloak Docker image bundled with extensions selected by DHEI"
 
 ADD providers /opt/jboss/keycloak/standalone/deployments
+
+USER root
+RUN chgrp -R 0 $JBOSS_HOME && chmod -R g+rw $JBOSS_HOME
