@@ -28,7 +28,7 @@ public class MetricsEndpoint implements RealmResourceProvider {
     	String remoteAddress = request.getRemoteAddr();
     	
     	if (!("127.0.0.1".equals(remoteAddress) || "0:0:0:0:0:0:0:1".equals(remoteAddress))) {
-    		final String forbiddenMessage = "Calling the metrics endpoint from outside is not allowed";
+    		final String forbiddenMessage = "Calling the metrics endpoint from " + remoteAddress + " is not allowed";
     		
     		throw new WebApplicationException(Response.status(Status.FORBIDDEN).entity(forbiddenMessage).build());
     	}
