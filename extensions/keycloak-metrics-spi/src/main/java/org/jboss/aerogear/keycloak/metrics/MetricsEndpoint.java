@@ -25,14 +25,17 @@ public class MetricsEndpoint implements RealmResourceProvider {
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     public Response get(@Context HttpServletRequest request) {
-    	String remoteAddress = request.getRemoteAddr();
+    	final String metricsAuthToken = request.getHeader("X-Metrics-Auth-Token");
+    	final String configuredMetricsAuthToken = PrometheusExporter.instance().getMetricsAuthToken();
     	
-    	if (!("127.0.0.1".equals(remoteAddress) || "0:0:0:0:0:0:0:1".equals(remoteAddress))) {
-    		final String forbiddenMessage = "Calling the metrics endpoint from " + remoteAddress + " is not allowed";
-    		
-    		throw new WebApplicationException(Response.status(Status.FORBIDDEN).entity(forbiddenMessage).build());
+    	if (configuredMetricsAuthToken != null) {
+        	if (metricsAuthToken == null || !configuredMetricsAuthToken.equals(metricsAuthToken)) {
+        		final String forbiddenMessage = "No or invalid authentication token has been provided.";
+        		
+        		throw new WebApplicationException(Response.status(Status.UNAUTHORIZED).entity(forbiddenMessage).build());
+        	}    		
     	}
-    	
+
         final StreamingOutput stream = output -> PrometheusExporter.instance().export(output);
         return Response.ok(stream).build();
     }
