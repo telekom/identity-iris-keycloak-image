@@ -15,7 +15,7 @@ public class MetricsEventListenerFactory implements EventListenerProviderFactory
 
     @Override
     public void init(Config.Scope config) {
-        // nothing to do
+    	// nothing to do
     }
 
     @Override

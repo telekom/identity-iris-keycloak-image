@@ -1,19 +1,24 @@
 package org.jboss.aerogear.keycloak.metrics;
 
-import io.prometheus.client.CollectorRegistry;
-import io.prometheus.client.Counter;
-import io.prometheus.client.Histogram;
-import io.prometheus.client.exporter.common.TextFormat;
-import io.prometheus.client.hotspot.DefaultExports;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.jboss.logging.Logger;
 import org.keycloak.events.Event;
 import org.keycloak.events.EventType;
 import org.keycloak.events.admin.AdminEvent;
 import org.keycloak.events.admin.OperationType;
 
-import java.io.*;
-import java.util.HashMap;
-import java.util.Map;
+import io.prometheus.client.CollectorRegistry;
+import io.prometheus.client.Counter;
+import io.prometheus.client.Histogram;
+import io.prometheus.client.exporter.common.TextFormat;
+import io.prometheus.client.hotspot.DefaultExports;
 
 public final class PrometheusExporter {
 
@@ -33,6 +38,8 @@ public final class PrometheusExporter {
     final Counter totalRegistrationsErrors;
     final Counter responseErrors;
     final Histogram requestDuration;
+    
+    private String metricsAuthToken;
 
     private PrometheusExporter() {
         // The metrics collector needs to be a singleton because requiring a
@@ -256,4 +263,12 @@ public final class PrometheusExporter {
     private String nullToEmpty(String value) {
         return value == null ? "" : value;
     }
+    
+    public void setMetricsAuthToken(String metricsAuthToken) {
+		this.metricsAuthToken = metricsAuthToken;
+	}
+    
+    public String getMetricsAuthToken() {
+		return metricsAuthToken;
+	}
 }

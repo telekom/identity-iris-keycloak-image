@@ -15,11 +15,15 @@ public class MetricsEndpointFactory implements RealmResourceProviderFactory {
 
     @Override
     public void init(Config.Scope config) {
+        final String metricsAuthToken = config.get("metrics-auth-token");
+
         ResteasyProviderFactory.getInstance().getContainerRequestFilterRegistry()
             .registerSingleton(MetricsFilter.instance());
 
         ResteasyProviderFactory.getInstance().getContainerResponseFilterRegistry()
             .registerSingleton(MetricsFilter.instance());
+                
+        PrometheusExporter.instance().setMetricsAuthToken(metricsAuthToken);
     }
 
     @Override

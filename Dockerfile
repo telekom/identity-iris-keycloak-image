@@ -8,4 +8,4 @@ LABEL description="joboss/keycloak Docker image bundled with extensions selected
 ADD providers /opt/jboss/keycloak/standalone/deployments
 
 USER root
-RUN chgrp -R 0 $JBOSS_HOME && chmod -R g+rw $JBOSS_HOME
+RUN chgrp -R 0 "$JBOSS_HOME" && chmod -R g=u "$JBOSS_HOME"
