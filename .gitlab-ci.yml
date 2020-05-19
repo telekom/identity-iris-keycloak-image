@@ -50,9 +50,7 @@ build:image:
   - build:extensions
   script:
   - *master-is-latest
-  - *mtr-login
   - docker build --no-cache --build-arg BASE_IMAGE_TAG=$MTR_BASE_IMAGE_TAG -t$MTR_REGISTRY/$MTR_TARGET_IMAGE:$MTR_TARGET_TAG .
-  - *mtr-logout
 
 publish:image:
   extends: .setup-job-basics
