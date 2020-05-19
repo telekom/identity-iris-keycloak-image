@@ -7,12 +7,12 @@ This image is meant to be used only with the Keycloak Helm chart provided by DHE
 
 ### keycloak-metrics-spi
 
-![Keycloak Prometheus Integration](img/Keycloak-Prometheus.png "Keycloak Prometheus Integration")
-
 If you deploy the Keycloak by using this image, it will make a new REST endpoint available: ``https://my-keycloak-instance/auth/realms/master/metrics``.  
 From this endpoint you will be able to access all metrics from all(!) relams no matter what realm is in the url.
 
-Important:  This image is meant to be used only with the Keycloak Helm chart provided by DHEI, since it will provide enhanced security configuration, so that the metrics won't be exposed to everyone.  
+![Keycloak Prometheus Integration](img/Keycloak-Prometheus.png "Keycloak Prometheus Integration")
+
+Important:  This Docker image is meant to be used only with the Keycloak Helm chart provided by DHEI, since it will provide enhanced security configuration, so that the metrics won't be exposed to everyone.  
 If you use this image with the Keycloak Helm chart provided by DHEI you will get the HTTP status ``401 Unauthorized`` if you try to call the new metrics endpoint. Apart from that ou will get the following response message:  
 > No or invalid authentication token has been provided.  
 
