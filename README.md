@@ -7,6 +7,8 @@ This image is meant to be used only with the Keycloak Helm chart provided by DHE
 
 ### keycloak-metrics-spi
 
+![Keycloak Prometheus Integration](img/Keycloak-Prometheus.png "Keycloak Prometheus Integration")
+
 If you deploy the Keycloak by using this image, it will make a new REST endpoint available: ``https://my-keycloak-instance/auth/realms/master/metrics``.  
 From this endpoint you will be able to access all metrics from all(!) relams no matter what realm is in the url.
 
