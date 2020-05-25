@@ -49,7 +49,7 @@ build:extensions:
   
 build:image:
   extends: .setup-job-basics
-  image: docker
+  image: docker:19.03.8
   stage: build
   dependencies:
   - build:extensions
@@ -61,7 +61,7 @@ build:image:
   
 publish:image:
   extends: .setup-job-basics
-  image: docker
+  image: docker:19.03.8
   stage: publish
   script:
   - *master-is-latest
