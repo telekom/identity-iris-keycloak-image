@@ -1,6 +1,8 @@
 variables:
   MTR_REGISTRY: mtr.external.otc.telekomcloud.com
+  
   MTR_USER: tif+gitpipeline
+  MTR_PUBLIC_USER: tif-public+gitpipeline
 
   MTR_TARGET_IMAGE: tif/tif-keycloak
   MTR_TARGET_TAG: $CI_COMMIT_REF_NAME
@@ -14,6 +16,9 @@ stages:
 
 .mtr-login: &mtr-login |
   docker login -u="$MTR_USER" -p="$MTR_TOKEN" $MTR_REGISTRY
+
+.mtr-public-login: &mtr-public-login |
+  docker login -u="$MTR_PUBLIC_USER" -p="$MTR_PUBLIC_TOKEN" $MTR_REGISTRY
 
 .mtr-logout: &mtr-logout |
   docker logout $MTR_REGISTRY || true
@@ -50,10 +55,10 @@ build:image:
   - build:extensions
   script:
   - *master-is-latest
-  - *mtr-login
+  - *mtr-public-login
   - docker build --no-cache --build-arg BASE_IMAGE_TAG=$MTR_BASE_IMAGE_TAG -t$MTR_REGISTRY/$MTR_TARGET_IMAGE:$MTR_TARGET_TAG .
   - *mtr-logout
-
+  
 publish:image:
   extends: .setup-job-basics
   image: docker
