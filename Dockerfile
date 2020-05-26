@@ -1,4 +1,4 @@
-ARG BASE_IMAGE_TAG=9.0.0
+ARG BASE_IMAGE_TAG=9.0.3
 
 FROM mtr.external.otc.telekomcloud.com/tif-public/keycloak:$BASE_IMAGE_TAG
 
