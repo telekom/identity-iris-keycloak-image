@@ -4,7 +4,7 @@ variables:
   MTR_USER: tif+gitpipeline
   MTR_PUBLIC_USER: tif-public+gitpipeline
 
-  MTR_TARGET_IMAGE: tif/tif-keycloak
+  MTR_TARGET_IMAGE: tif/iris
   MTR_TARGET_TAG: $CI_COMMIT_REF_NAME
 
   MTR_BASE_IMAGE_TAG: '9.0.0'
