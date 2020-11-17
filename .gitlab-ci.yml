@@ -43,9 +43,11 @@ build:extensions:
   script:
   - *add_alpine_packages
   - cd extensions && ./build.sh
+  - cd ./../themes && chmod +x build.sh && ./build.sh
   artifacts:
     paths:
     - "$CI_PROJECT_DIR/providers/"
+    - "$CI_PROJECT_DIR/themez/"
   
 build:image:
   extends: .setup-job-basics
