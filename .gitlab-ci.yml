@@ -5,13 +5,14 @@ variables:
   MTR_PUBLIC_USER: tif-public+gitpipeline
 
   MTR_TARGET_IMAGE: tif/iris
+  MTR_PUBLIC_TARGET_IMAGE: tif-public/iris
   MTR_TARGET_TAG: $CI_COMMIT_REF_NAME
 
   MTR_BASE_IMAGE_TAG: '9.0.0'
 
 stages:
 - prepare
-- build
+- dockerize
 - publish
 
 .mtr-login: &mtr-login |
@@ -52,21 +53,29 @@ build:extensions:
 build:image:
   extends: .setup-job-basics
   image: docker:19.03.8
-  stage: build
+  stage: dockerize
   dependencies:
   - build:extensions
   script:
   - *master-is-latest
   - *mtr-public-login
-  - docker build --no-cache --build-arg BASE_IMAGE_TAG=$MTR_BASE_IMAGE_TAG -t$MTR_REGISTRY/$MTR_TARGET_IMAGE:$MTR_TARGET_TAG .
+  - docker build --no-cache --build-arg BASE_IMAGE_TAG=$MTR_BASE_IMAGE_TAG -t $MTR_REGISTRY/$MTR_TARGET_IMAGE:$MTR_TARGET_TAG .
+  - *mtr-logout
+  - *mtr-login
+  - docker push $MTR_REGISTRY/$MTR_TARGET_IMAGE:$MTR_TARGET_TAG
   - *mtr-logout
   
 publish:image:
   extends: .setup-job-basics
   image: docker:19.03.8
   stage: publish
+  only:
+    - tags
   script:
-  - *master-is-latest
   - *mtr-login
-  - docker push $MTR_REGISTRY/$MTR_TARGET_IMAGE:$MTR_TARGET_TAG
+  - docker pull $MTR_REGISTRY/$MTR_TARGET_IMAGE:$MTR_TARGET_TAG
+  - *mtr-logout
+  - docker tag $MTR_REGISTRY/$MTR_TARGET_IMAGE:$MTR_TARGET_TAG $MTR_REGISTRY/$MTR_PUBLIC_TARGET_IMAGE:$MTR_TARGET_TAG
+  - *mtr-public-login
+  - docker push $MTR_REGISTRY/$MTR_PUBLIC_TARGET_IMAGE:$MTR_TARGET_TAG
   - *mtr-logout
