@@ -1,9 +1,4 @@
 variables:
-  MTR_REGISTRY: mtr.external.otc.telekomcloud.com
-  
-  MTR_USER: tif+gitpipeline
-  MTR_PUBLIC_USER: tif-public+gitpipeline
-
   MTR_TARGET_IMAGE: tif/iris
   MTR_PUBLIC_TARGET_IMAGE: tif-public/iris
   MTR_TARGET_TAG: $CI_COMMIT_REF_NAME
