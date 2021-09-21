@@ -45,6 +45,7 @@ publish:image:
   extends: .docker:mirror:tif-to-tif-public
   stage: publish
   only:
-    - tags
+    refs:
+      - tags
   dependencies:
-  - build:image
+    - build:image
