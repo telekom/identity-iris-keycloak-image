@@ -1,8 +1,11 @@
-variables:
-  MTR_TARGET_IMAGE: tif/iris
-  MTR_PUBLIC_TARGET_IMAGE: tif-public/iris
-  MTR_TARGET_TAG: $CI_COMMIT_REF_NAME
+include:
+  - project: 'dhei/teams/io/templates/gitlab-pipelines'
+    file: '/docker/gitlab-ci.docker.yml'
+    ref: develop
 
+variables:
+  MTR_TARGET_IMAGE:   iris
+  MTR_TARGET_TAG:     $CI_COMMIT_REF_NAME
   MTR_BASE_IMAGE_TAG: '9.0.0'
 
 stages:
@@ -10,30 +13,15 @@ stages:
 - dockerize
 - publish
 
-.mtr-login: &mtr-login |
-  docker login -u="$MTR_USER" -p="$MTR_TOKEN" $MTR_REGISTRY
-
-.mtr-public-login: &mtr-public-login |
-  docker login -u="$MTR_PUBLIC_USER" -p="$MTR_PUBLIC_TOKEN" $MTR_REGISTRY
-
-.mtr-logout: &mtr-logout |
-  docker logout $MTR_REGISTRY || true
-
-.master-is-latest: &master-is-latest |
-  [[ "$MTR_TARGET_TAG" == "master" ]] && export MTR_TARGET_TAG=latest
-  [[ "$MTR_BASE_IMAGE_TAG" == "master" ]] && export MTR_BASE_IMAGE_TAG=latest
-
 .add_alpine_packages: &add_alpine_packages |
   apk add --no-cache bash
 
-.setup-job-basics: &setup-job-basics
-  tags:
-  - run01_docker
+default:
+  tags: [ "otc_run_docker_m" ]
 
 # jobs
 
 build:extensions:
-  extends: .setup-job-basics
   image: openjdk:15-jdk-alpine
   stage: prepare
   script:
@@ -46,31 +34,17 @@ build:extensions:
     - "$CI_PROJECT_DIR/themez/"
   
 build:image:
-  extends: .setup-job-basics
-  image: docker:19.03.8
+  extends: .docker:build:tif-with-dependencies
   stage: dockerize
+  variables:
+    CUSTOM_DOCKER_BUILD_OPTIONS: "--build-arg BASE_IMAGE_TAG=$MTR_BASE_IMAGE_TAG"
   dependencies:
   - build:extensions
-  script:
-  - *master-is-latest
-  - *mtr-public-login
-  - docker build --no-cache --build-arg BASE_IMAGE_TAG=$MTR_BASE_IMAGE_TAG -t $MTR_REGISTRY/$MTR_TARGET_IMAGE:$MTR_TARGET_TAG .
-  - *mtr-logout
-  - *mtr-login
-  - docker push $MTR_REGISTRY/$MTR_TARGET_IMAGE:$MTR_TARGET_TAG
-  - *mtr-logout
   
 publish:image:
-  extends: .setup-job-basics
-  image: docker:19.03.8
+  extends: .docker:mirror:tif-to-tif-public
   stage: publish
   only:
     - tags
-  script:
-  - *mtr-login
-  - docker pull $MTR_REGISTRY/$MTR_TARGET_IMAGE:$MTR_TARGET_TAG
-  - *mtr-logout
-  - docker tag $MTR_REGISTRY/$MTR_TARGET_IMAGE:$MTR_TARGET_TAG $MTR_REGISTRY/$MTR_PUBLIC_TARGET_IMAGE:$MTR_TARGET_TAG
-  - *mtr-public-login
-  - docker push $MTR_REGISTRY/$MTR_PUBLIC_TARGET_IMAGE:$MTR_TARGET_TAG
-  - *mtr-logout
+  dependencies:
+  - build:image
