@@ -1,9 +1,12 @@
 package org.jboss.aerogear.keycloak.metrics;
 
-import io.prometheus.client.Counter;
+import io.prometheus.client.CollectorRegistry;
 import org.hamcrest.MatcherAssert;
+import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.contrib.java.lang.system.EnvironmentVariables;
 import org.keycloak.events.Event;
 import org.keycloak.events.EventType;
 import org.keycloak.events.admin.AdminEvent;
@@ -12,6 +15,7 @@ import org.keycloak.events.admin.ResourceType;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.Collections;
 import java.util.HashMap;
 
@@ -23,14 +27,15 @@ public class PrometheusExporterTest {
 
     private static final String DEFAULT_REALM = "myrealm";
 
+    @Rule
+    public final EnvironmentVariables environmentVariables = new EnvironmentVariables();
+
     @Before
-    public void before() {
-        for (Counter counter : PrometheusExporter.instance().counters.values()) {
-            counter.clear();
-        }
-        PrometheusExporter.instance().totalLogins.clear();
-        PrometheusExporter.instance().totalFailedLoginAttempts.clear();
-        PrometheusExporter.instance().totalRegistrations.clear();
+    public void resetSingleton() throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
+        Field instance = PrometheusExporter.class.getDeclaredField("INSTANCE");
+        instance.setAccessible(true);
+        instance.set(null, null);
+        CollectorRegistry.defaultRegistry.clear();
     }
 
     @Test
@@ -43,6 +48,21 @@ public class PrometheusExporterTest {
             userEvents + adminEvents - 3,                             // -3 comes from the events that
             is(PrometheusExporter.instance().counters.size()));       // have their own counters outside the counter map
 
+    }
+
+    @Test
+    public void shouldCorrectlyCountLoginAttemptsForSuccessfulAndFailedAttempts() throws IOException {
+        // with LOGIN event
+        final Event login1 = createEvent(EventType.LOGIN, DEFAULT_REALM, "THE_CLIENT_ID");
+        PrometheusExporter.instance().recordLogin(login1);
+        assertMetric("keycloak_login_attempts", 1, tuple("provider", "keycloak"), tuple("client_id", "THE_CLIENT_ID"));
+        assertMetric("keycloak_logins", 1, tuple("provider", "keycloak"), tuple("client_id", "THE_CLIENT_ID"));
+
+        // with LOGIN_ERROR event
+        final Event event2 = createEvent(EventType.LOGIN_ERROR, DEFAULT_REALM, "THE_CLIENT_ID", "user_not_found");
+        PrometheusExporter.instance().recordLoginError(event2);
+        assertMetric("keycloak_login_attempts", 2, tuple("provider", "keycloak"), tuple("client_id", "THE_CLIENT_ID"));
+        assertMetric("keycloak_failed_login_attempts", 1, tuple("provider", "keycloak"), tuple("error", "user_not_found"), tuple("client_id", "THE_CLIENT_ID"));
     }
 
     @Test
@@ -124,6 +144,90 @@ public class PrometheusExporterTest {
     }
 
     @Test
+    public void shouldCorrectlyCountRefreshTokens() throws IOException {
+        // with id provider defined
+        final Event event1 = createEvent(EventType.REFRESH_TOKEN, DEFAULT_REALM, "THE_CLIENT_ID", tuple("identity_provider", "THE_ID_PROVIDER"));
+        PrometheusExporter.instance().recordRefreshToken(event1);
+        assertMetric("keycloak_refresh_tokens", 1, tuple("provider", "THE_ID_PROVIDER"), tuple("client_id", "THE_CLIENT_ID"));
+
+        // without id provider defined
+        final Event event2 = createEvent(EventType.REFRESH_TOKEN, DEFAULT_REALM, "THE_CLIENT_ID");
+        PrometheusExporter.instance().recordRefreshToken(event2);
+        assertMetric("keycloak_refresh_tokens", 1, tuple("provider", "keycloak"), tuple("client_id", "THE_CLIENT_ID"));
+        assertMetric("keycloak_refresh_tokens", 1, tuple("provider", "THE_ID_PROVIDER"), tuple("client_id", "THE_CLIENT_ID"));
+    }
+
+    @Test
+    public void shouldCorrectlyCountRefreshTokensErrors() throws IOException {
+        // with id provider defined
+        final Event event1 = createEvent(EventType.REFRESH_TOKEN_ERROR, DEFAULT_REALM, "THE_CLIENT_ID", "user_not_found", tuple("identity_provider", "THE_ID_PROVIDER"));
+        PrometheusExporter.instance().recordRefreshTokenError(event1);
+        assertMetric("keycloak_refresh_tokens_errors", 1, tuple("provider", "THE_ID_PROVIDER"), tuple("error", "user_not_found"), tuple("client_id", "THE_CLIENT_ID"));
+
+        // without id provider defined
+        final Event event2 = createEvent(EventType.REFRESH_TOKEN_ERROR, DEFAULT_REALM, "THE_CLIENT_ID", "user_not_found");
+        PrometheusExporter.instance().recordRefreshTokenError(event2);
+        assertMetric("keycloak_refresh_tokens_errors", 1, tuple("provider", "keycloak"), tuple("error", "user_not_found"), tuple("client_id", "THE_CLIENT_ID"));
+        assertMetric("keycloak_refresh_tokens_errors", 1, tuple("provider", "THE_ID_PROVIDER"), tuple("error", "user_not_found"), tuple("client_id", "THE_CLIENT_ID"));
+    }
+
+    @Test
+    public void shouldCorrectlyCountClientLogins() throws IOException {
+        // with id provider defined
+        final Event event1 = createEvent(EventType.CLIENT_LOGIN, DEFAULT_REALM, "THE_CLIENT_ID", tuple("identity_provider", "THE_ID_PROVIDER"));
+        PrometheusExporter.instance().recordClientLogin(event1);
+        assertMetric("keycloak_client_logins", 1, tuple("provider", "THE_ID_PROVIDER"), tuple("client_id", "THE_CLIENT_ID"));
+
+        // without id provider defined
+        final Event event2 = createEvent(EventType.CLIENT_LOGIN, DEFAULT_REALM, "THE_CLIENT_ID");
+        PrometheusExporter.instance().recordClientLogin(event2);
+        assertMetric("keycloak_client_logins", 1, tuple("provider", "keycloak"), tuple("client_id", "THE_CLIENT_ID"));
+        assertMetric("keycloak_client_logins", 1, tuple("provider", "THE_ID_PROVIDER"), tuple("client_id", "THE_CLIENT_ID"));
+    }
+
+    @Test
+    public void shouldCorrectlyCountClientLoginAttempts() throws IOException {
+        // with id provider defined
+        final Event event1 = createEvent(EventType.CLIENT_LOGIN_ERROR, DEFAULT_REALM, "THE_CLIENT_ID", "user_not_found", tuple("identity_provider", "THE_ID_PROVIDER"));
+        PrometheusExporter.instance().recordClientLoginError(event1);
+        assertMetric("keycloak_failed_client_login_attempts", 1, tuple("provider", "THE_ID_PROVIDER"), tuple("error", "user_not_found"), tuple("client_id", "THE_CLIENT_ID"));
+
+        // without id provider defined
+        final Event event2 = createEvent(EventType.CLIENT_LOGIN_ERROR, DEFAULT_REALM, "THE_CLIENT_ID", "user_not_found");
+        PrometheusExporter.instance().recordClientLoginError(event2);
+        assertMetric("keycloak_failed_client_login_attempts", 1, tuple("provider", "keycloak"), tuple("error", "user_not_found"), tuple("client_id", "THE_CLIENT_ID"));
+        assertMetric("keycloak_failed_client_login_attempts", 1, tuple("provider", "THE_ID_PROVIDER"), tuple("error", "user_not_found"), tuple("client_id", "THE_CLIENT_ID"));
+    }
+
+    @Test
+    public void shouldCorrectlyCountCodeToTokens() throws IOException {
+        // with id provider defined
+        final Event event1 = createEvent(EventType.CODE_TO_TOKEN, DEFAULT_REALM, "THE_CLIENT_ID", tuple("identity_provider", "THE_ID_PROVIDER"));
+        PrometheusExporter.instance().recordCodeToToken(event1);
+        assertMetric("keycloak_code_to_tokens", 1, tuple("provider", "THE_ID_PROVIDER"), tuple("client_id", "THE_CLIENT_ID"));
+
+        // without id provider defined
+        final Event event2 = createEvent(EventType.CODE_TO_TOKEN, DEFAULT_REALM, "THE_CLIENT_ID");
+        PrometheusExporter.instance().recordCodeToToken(event2);
+        assertMetric("keycloak_code_to_tokens", 1, tuple("provider", "keycloak"), tuple("client_id", "THE_CLIENT_ID"));
+        assertMetric("keycloak_code_to_tokens", 1, tuple("provider", "THE_ID_PROVIDER"), tuple("client_id", "THE_CLIENT_ID"));
+    }
+
+    @Test
+    public void shouldCorrectlyCountCodeToTokensErrors() throws IOException {
+        // with id provider defined
+        final Event event1 = createEvent(EventType.CODE_TO_TOKEN_ERROR, DEFAULT_REALM, "THE_CLIENT_ID", "user_not_found", tuple("identity_provider", "THE_ID_PROVIDER"));
+        PrometheusExporter.instance().recordCodeToTokenError(event1);
+        assertMetric("keycloak_code_to_tokens_errors", 1, tuple("provider", "THE_ID_PROVIDER"), tuple("error", "user_not_found"), tuple("client_id", "THE_CLIENT_ID"));
+
+        // without id provider defined
+        final Event event2 = createEvent(EventType.CODE_TO_TOKEN_ERROR, DEFAULT_REALM, "THE_CLIENT_ID", "user_not_found");
+        PrometheusExporter.instance().recordCodeToTokenError(event2);
+        assertMetric("keycloak_code_to_tokens_errors", 1, tuple("provider", "keycloak"), tuple("error", "user_not_found"), tuple("client_id", "THE_CLIENT_ID"));
+        assertMetric("keycloak_code_to_tokens_errors", 1, tuple("provider", "THE_ID_PROVIDER"), tuple("error", "user_not_found"), tuple("client_id", "THE_CLIENT_ID"));
+    }
+
+    @Test
     public void shouldCorrectlyRecordGenericEvents() throws IOException {
         final Event event1 = createEvent(EventType.UPDATE_EMAIL);
         PrometheusExporter.instance().recordGenericEvent(event1);
@@ -161,15 +265,31 @@ public class PrometheusExporterTest {
 
     @Test
     public void shouldCorrectlyRecordResponseDurations() throws IOException {
-        PrometheusExporter.instance().recordRequestDuration(5, "GET", "/");
-        assertGenericMetric("keycloak_request_duration_count", 1, tuple("method", "GET"), tuple("route", "/"));
-        assertGenericMetric("keycloak_request_duration_sum", 5, tuple("method", "GET"), tuple("route", "/"));
+        environmentVariables.set("URI_METRICS_ENABLED", "true");
+        PrometheusExporter.instance().recordRequestDuration(200, 5, "GET", "admin,admin/serverinfo", "auth/realm");
+        assertGenericMetric("keycloak_request_duration_count", 1,
+            tuple("code","200"), tuple("method", "GET"), tuple("resource", "admin,admin/serverinfo"), tuple("uri", "auth/realm"));
+        assertGenericMetric("keycloak_request_duration_sum", 5,
+            tuple("code","200"), tuple("method", "GET"), tuple("resource", "admin,admin/serverinfo"), tuple("uri", "auth/realm"));
+    }
+
+    @Test
+    public void shouldCorrectlyRecordResponseTotal() throws IOException {
+        environmentVariables.set("URI_METRICS_ENABLED", "true");
+        PrometheusExporter.instance().recordResponseTotal(200, "GET", "admin,admin/serverinfo", "auth/realm");
+        PrometheusExporter.instance().recordResponseTotal(500, "POST", "admin,admin/serverinfo", "auth/realm");
+        assertGenericMetric("keycloak_response_total", 1,
+            tuple("code", "200"), tuple("method", "GET"), tuple("resource", "admin,admin/serverinfo"), tuple("uri", "auth/realm"));
+        assertGenericMetric("keycloak_response_total", 1,
+            tuple("code", "500"), tuple("method", "POST"), tuple("resource", "admin,admin/serverinfo"), tuple("uri", "auth/realm"));
     }
 
     @Test
     public void shouldCorrectlyRecordResponseErrors() throws IOException {
-        PrometheusExporter.instance().recordResponseError(500, "POST", "/");
-        assertGenericMetric("keycloak_response_errors", 1, tuple("code", "500"), tuple("method", "POST"), tuple("route", "/"));
+        environmentVariables.set("URI_METRICS_ENABLED", "true");
+        PrometheusExporter.instance().recordResponseError(500, "POST", "admin,admin/serverinfo", "auth/realm");
+        assertGenericMetric("keycloak_response_errors", 1,
+            tuple("code", "500"), tuple("method", "POST"), tuple("resource", "admin,admin/serverinfo"), tuple("uri", "auth/realm"));
     }
 
     @Test
@@ -181,6 +301,28 @@ public class PrometheusExporterTest {
         PrometheusExporter.instance().recordLoginError(nullEvent);
         assertMetric("keycloak_failed_login_attempts", 1, "", tuple("provider", "keycloak"), tuple("error", ""), tuple("client_id", ""));
     }
+
+    @Test
+    public void shouldBuildPushgateway() throws IOException {
+        final String envVar = "PROMETHEUS_PUSHGATEWAY_ADDRESS";
+        final String address = "localhost:9091";
+        environmentVariables.set(envVar, address);
+        Assert.assertNotNull(PrometheusExporter.instance().PUSH_GATEWAY);
+    }
+
+    @Test
+    public void shouldBuildPushgatewayWithHttps() throws IOException {
+        final String envVar = "PROMETHEUS_PUSHGATEWAY_ADDRESS";
+        final String address = "https://localhost:9091";
+        environmentVariables.set(envVar, address);
+        Assert.assertNotNull(PrometheusExporter.instance().PUSH_GATEWAY);
+    }
+
+    @Test
+    public void shouldNotBuildPushgateway() throws IOException {
+        Assert.assertNull(PrometheusExporter.instance().PUSH_GATEWAY);
+    }
+
 
     private void assertGenericMetric(String metricName, double metricValue, Tuple<String, String>... labels) throws IOException {
         try (ByteArrayOutputStream stream = new ByteArrayOutputStream()) {
