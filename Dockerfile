@@ -6,7 +6,7 @@ LABEL maintainer="Digital Hub Enterprise Integration (DHEI)"
 LABEL description="joboss/keycloak Docker image bundled with extensions selected by DHEI"
 
 ADD providers /opt/jboss/keycloak/standalone/deployments
-ADD themez /opt/jboss/keycloak/standalone/deployments
+#ADD themez /opt/jboss/keycloak/standalone/deployments
 
 USER root
 
