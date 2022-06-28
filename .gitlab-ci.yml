@@ -42,7 +42,7 @@ build:image:
   - build:extensions
 
 build:image-devops:
-  extends: .docker:build:mtr-devops
+  extends: .docker:build:tif-public-to-mtr-devops-internal
   stage: dockerize
   variables:
     CUSTOM_DOCKER_BUILD_OPTIONS: "--build-arg BASE_IMAGE_TAG=$MTR_BASE_IMAGE_TAG"
