@@ -40,6 +40,14 @@ build:image:
     CUSTOM_DOCKER_BUILD_OPTIONS: "--build-arg BASE_IMAGE_TAG=$MTR_BASE_IMAGE_TAG"
   dependencies:
   - build:extensions
+
+build:image-devops:
+  extends: .docker:build:mtr-devops
+  stage: dockerize
+  variables:
+    CUSTOM_DOCKER_BUILD_OPTIONS: "--build-arg BASE_IMAGE_TAG=$MTR_BASE_IMAGE_TAG"
+  dependencies:
+  - build:extensions
   
 publish:image:
   extends: .docker:mirror:tif-to-tif-public
