@@ -11,6 +11,7 @@ variables:
 stages:
 - prepare
 - dockerize
+- copy
 - publish
 
 .add_alpine_packages: &add_alpine_packages |
@@ -57,3 +58,13 @@ publish:image:
       - tags
   dependencies:
     - build:image
+copy:image-from-tif-public-to-new-mtr:
+  extends: .docker:mirror:tif-public-to-mtr-devops-internal
+  stage: image
+  when: manual
+  variables:
+    MTR_PUBLIC_SRC_IMAGE: keycloak
+    MTR_PUBLIC_SRC_TAG: 9.0.3
+    MTR_PUBLIC_SRC_GROUP: tif-public
+    MTR_TARGET_IMAGE: iris
+    MTR_TARGET_TAG: 9.0.3
