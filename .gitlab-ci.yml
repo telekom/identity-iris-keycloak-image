@@ -6,7 +6,7 @@ include:
 variables:
   MTR_TARGET_IMAGE:   iris
   MTR_TARGET_TAG:     $CI_COMMIT_REF_NAME
-  MTR_BASE_IMAGE_TAG: '9.0.0'
+  MTR_BASE_IMAGE_TAG: '16.1.1'
 
 stages:
 - prepare
@@ -27,12 +27,22 @@ build:extensions:
   script:
   - *add_alpine_packages
   - cd extensions && ./build.sh
+  - cd ./../themes && chmod +x build.sh && ./build.sh
   artifacts:
     paths:
     - "$CI_PROJECT_DIR/providers/"
+    - "$CI_PROJECT_DIR/themez/"
   
 build:image:
   extends: .docker:build:tif-with-dependencies
+  stage: dockerize
+  variables:
+    CUSTOM_DOCKER_BUILD_OPTIONS: "--build-arg BASE_IMAGE_TAG=$MTR_BASE_IMAGE_TAG"
+  dependencies:
+  - build:extensions
+
+build:image-devops:
+  extends: .docker:build:tif-public-to-mtr-devops-internal
   stage: dockerize
   variables:
     CUSTOM_DOCKER_BUILD_OPTIONS: "--build-arg BASE_IMAGE_TAG=$MTR_BASE_IMAGE_TAG"
