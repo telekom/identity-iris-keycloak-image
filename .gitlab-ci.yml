@@ -58,9 +58,10 @@ publish:image:
       - tags
   dependencies:
     - build:image
+
 copy:image-from-tif-public-to-new-mtr:
   extends: .docker:mirror:tif-public-to-mtr-devops-internal
-  stage: image
+  stage: copy
   when: manual
   variables:
     MTR_PUBLIC_SRC_IMAGE: keycloak
