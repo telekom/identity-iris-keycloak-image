@@ -9,6 +9,7 @@ variables:
   MTR_BASE_IMAGE_TAG: '16.1.1'
 
 stages:
+- copy
 - prepare
 - dockerize
 - publish
@@ -63,10 +64,10 @@ publish:image:
 
 copy:image-from-tif-public-to-mtr-common:
   extends: .docker:mirror:tif-public-to-mtr-devops-common
-  stage: prepare
+  stage: copy
   when: manual
   variables:
     MTR_TIF_PUBLIC_SRC_IMAGE: keycloak
-    MTR_TIF_PUBLIC_SRC_TAG: 14.0.0
+    MTR_TIF_PUBLIC_SRC_TAG: 16.1.1
     MTR_TARGET_IMAGE: keycloak
-    MTR_TARGET_TAG: 14.0.0
+    MTR_TARGET_TAG: 16.1.1
