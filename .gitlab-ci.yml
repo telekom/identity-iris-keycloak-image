@@ -24,6 +24,7 @@ default:
 build:extensions:
   image: openjdk:15-jdk-alpine
   stage: prepare
+  when: manual
   script:
   - *add_alpine_packages
   - cd extensions && ./build.sh
@@ -36,6 +37,7 @@ build:extensions:
 build:image:
   extends: .docker:build:tif-with-dependencies
   stage: dockerize
+  when: manual
   variables:
     CUSTOM_DOCKER_BUILD_OPTIONS: "--build-arg BASE_IMAGE_TAG=$MTR_BASE_IMAGE_TAG"
   dependencies:
@@ -44,6 +46,7 @@ build:image:
 build:image-devops:
   extends: .docker:build:tif-public-to-mtr-devops-internal
   stage: dockerize
+  when: manual
   variables:
     CUSTOM_DOCKER_BUILD_OPTIONS: "--build-arg BASE_IMAGE_TAG=$MTR_BASE_IMAGE_TAG"
   dependencies:
@@ -64,6 +67,6 @@ copy:image-from-tif-public-to-mtr-common:
   when: manual
   variables:
     MTR_TIF_PUBLIC_SRC_IMAGE: keycloak
-    MTR_TIF_PUBLIC_SRC_TAG: 9.0.3
+    MTR_TIF_PUBLIC_SRC_TAG: 14.0.0
     MTR_TARGET_IMAGE: keycloak
-    MTR_TARGET_TAG: 9.0.3
+    MTR_TARGET_TAG: 14.0.0
