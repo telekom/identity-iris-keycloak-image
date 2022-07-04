@@ -10,7 +10,6 @@ variables:
 
 stages:
 - prepare
-- copy
 - dockerize
 - publish
 
@@ -59,12 +58,11 @@ publish:image:
   dependencies:
     - build:image
 
-copy:image-from-tif-public-to-new-mtr:
+copy:image-from-tif-public-to-mtr-common:
   extends: .docker:mirror:tif-public-to-mtr-devops-common
-  stage: copy
   when: manual
   variables:
-    MTR_PUBLIC_SRC_IMAGE: keycloak
-    MTR_PUBLIC_SRC_TAG: 9.0.3
+    MTR_TIF_PUBLIC_SRC_IMAGE: keycloak
+    MTR_TIF_PUBLIC_SRC_TAG: 9.0.3
     MTR_TARGET_IMAGE: keycloak
     MTR_TARGET_TAG: 9.0.3
