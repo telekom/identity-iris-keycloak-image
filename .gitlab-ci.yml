@@ -60,7 +60,7 @@ publish:image:
 
 copy:image-from-tif-public-to-mtr-common:
   extends: .docker:mirror:tif-public-to-mtr-devops-common
-  stage: publish
+  stage: prepare
   when: manual
   variables:
     MTR_TIF_PUBLIC_SRC_IMAGE: keycloak
