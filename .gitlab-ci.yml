@@ -44,7 +44,7 @@ build:image:
   dependencies:
   - build:extensions
 
-build:image-devops:
+build:image-mtr-internal:
   extends: .docker:build:tif-public-to-mtr-devops-internal
   stage: dockerize
   when: manual
