@@ -35,7 +35,7 @@ build:extensions:
     - "$CI_PROJECT_DIR/themez/"
   
 build:image:
-  extends: .docker:build:mtr-devops-internal-with-dependencies
+  extends: .docker:build:mtr-devops-internal-with-tardis-common-and-dependencies
   stage: dockerize
   variables:
     CUSTOM_DOCKER_BUILD_OPTIONS: "--build-arg BASE_IMAGE_TAG=$MTR_BASE_IMAGE_TAG"
