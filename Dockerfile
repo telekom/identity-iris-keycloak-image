@@ -1,6 +1,6 @@
-ARG BASE_IMAGE_TAG=9.0.3
+ARG BASE_IMAGE_TAG=16.1.1
 
-FROM mtr.external.otc.telekomcloud.com/tif-public/keycloak:$BASE_IMAGE_TAG
+FROM mtr.devops.telekom.de/tardis-common/keycloak:$BASE_IMAGE_TAG
 
 LABEL maintainer="Digital Hub Enterprise Integration (DHEI)"
 LABEL description="joboss/keycloak Docker image bundled with extensions selected by DHEI"

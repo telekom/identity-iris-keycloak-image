@@ -36,16 +36,7 @@ build:extensions:
     - "$CI_PROJECT_DIR/themez/"
   
 build:image:
-  extends: .docker:build:tif-with-dependencies
-  stage: dockerize
-  when: manual
-  variables:
-    CUSTOM_DOCKER_BUILD_OPTIONS: "--build-arg BASE_IMAGE_TAG=$MTR_BASE_IMAGE_TAG"
-  dependencies:
-  - build:extensions
-
-build:image-mtr-internal:
-  extends: .docker:build:tif-public-to-mtr-devops-internal
+  extends: .docker:build:mtr-devops-internal-with-dependencies
   stage: dockerize
   when: manual
   variables:
@@ -54,20 +45,10 @@ build:image-mtr-internal:
   - build:extensions
   
 publish:image:
-  extends: .docker:mirror:tif-to-tif-public
+  extends: .docker:mirror:mtr-devops-internal-to-customer
   stage: publish
   only:
     refs:
       - tags
   dependencies:
     - build:image
-
-copy:image-from-tif-public-to-mtr-common:
-  extends: .docker:mirror:tif-public-to-mtr-devops-common
-  stage: copy
-  when: manual
-  variables:
-    MTR_TIF_PUBLIC_SRC_IMAGE: keycloak
-    MTR_TIF_PUBLIC_SRC_TAG: 16.1.1
-    MTR_TARGET_IMAGE: keycloak
-    MTR_TARGET_TAG: 16.1.1
