@@ -10,6 +10,9 @@ ADD themez /opt/jboss/keycloak/standalone/deployments
 
 USER root
 
+#Update dependencies
+RUN microdnf upgrade --setopt=install_weak_deps=0
+
 # Used for OpenShift compatibility
 # See: https://docs.openshift.com/container-platform/3.11/creating_images/guidelines.html
 RUN chgrp -R 0 "$JBOSS_HOME" && chmod -R g=u "$JBOSS_HOME"
