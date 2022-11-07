@@ -9,6 +9,7 @@ variables:
   MTR_BASE_IMAGE_TAG: '16.1.1'
 
 stages:
+- copy
 - prepare
 - dockerize
 - publish
@@ -34,15 +35,7 @@ build:extensions:
     - "$CI_PROJECT_DIR/themez/"
   
 build:image:
-  extends: .docker:build:tif-with-dependencies
-  stage: dockerize
-  variables:
-    CUSTOM_DOCKER_BUILD_OPTIONS: "--build-arg BASE_IMAGE_TAG=$MTR_BASE_IMAGE_TAG"
-  dependencies:
-  - build:extensions
-
-build:image-devops:
-  extends: .docker:build:tif-public-to-mtr-devops-internal
+  extends: .docker:build:mtr-devops-internal-with-tardis-common-and-dependencies
   stage: dockerize
   variables:
     CUSTOM_DOCKER_BUILD_OPTIONS: "--build-arg BASE_IMAGE_TAG=$MTR_BASE_IMAGE_TAG"
@@ -50,7 +43,7 @@ build:image-devops:
   - build:extensions
   
 publish:image:
-  extends: .docker:mirror:tif-to-tif-public
+  extends: .docker:mirror:mtr-devops-internal-to-customer
   stage: publish
   only:
     refs:

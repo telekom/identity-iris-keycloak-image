@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.0.1
+* added microdnf upgrade to Dockerfile to reduce CVEs
+
 ## 2.0.0-RC
 
 * keycloak updated to 16.1.1
