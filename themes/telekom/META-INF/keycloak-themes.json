@@ -2,5 +2,9 @@
     "themes": [{
         "name" : "telekom",
         "types": [ "login" ]
+    },
+    {
+        "name" : "enilogin",
+        "types": [ "login" ]
     }]
 }
