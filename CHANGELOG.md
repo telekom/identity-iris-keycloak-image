@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.0.2
+* Added enilogin login theme
+
 ## 2.0.1
 * added microdnf upgrade to Dockerfile to reduce CVEs
 
