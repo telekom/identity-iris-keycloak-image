@@ -3,7 +3,7 @@ ARG BASE_IMAGE_TAG=20.0.1
 FROM mtr.devops.telekom.de/tardis-common/keycloak:$BASE_IMAGE_TAG
 
 LABEL maintainer="Digital Hub Enterprise Integration (DHEI)"
-LABEL description="joboss/keycloak Docker image bundled with extensions selected by DHEI"
+LABEL description="Keycloak Docker image bundled with extensions selected by DHEI"
 
 # ADD providers /opt/jboss/keycloak/standalone/deployments
 ADD providers /opt/keycloak/providers/
