@@ -11,6 +11,7 @@ ENV KC_METRICS_ENABLED=true
 
 # Configure a database vendor
 ENV KC_DB=postgres
+ENV KC_HTTP_RELATIVE_PATH=/auth
 
 WORKDIR /opt/keycloak
 RUN /opt/keycloak/bin/kc.sh build
