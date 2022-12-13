@@ -15,7 +15,7 @@ ENV KC_HTTP_RELATIVE_PATH=/auth
 
 ADD providers /opt/keycloak/providers/
 
-ADD themez /opt/keycloak/themes
+ADD themez /opt/keycloak/providers/
 
 WORKDIR /opt/keycloak
 RUN /opt/keycloak/bin/kc.sh build
