@@ -8,7 +8,6 @@ LABEL description="Keycloak Docker image bundled with extensions selected by DHE
 # Enable health and metrics support
 ENV KC_HEALTH_ENABLED=true
 ENV KC_METRICS_ENABLED=true
-ENV KC_CACHE_STACK=kubernetes
 
 # Configure a database vendor
 ENV KC_DB=postgres
