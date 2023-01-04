@@ -13,3 +13,4 @@ From this endpoint you will be able to access all metrics from all(!) realms no 
 After deploying the Iris Helm chart this path won't be available because it isn't secured by a password and therefore blocked by ha-proxy. 
 To provide the metrics to the monitoring infrastructure ha-proxy forwards requests from :9542/metrics to Keycloaks metrics.
  
+ ![Keycloak Prometheus Integration](img/Keycloak-Prometheus.png "Keycloak Prometheus Integration")
