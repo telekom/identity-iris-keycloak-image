@@ -1,4 +1,4 @@
-ARG BASE_IMAGE_TAG=20.0.1
+ARG BASE_IMAGE_TAG=20.0.2
 
 FROM mtr.devops.telekom.de/tardis-common/keycloak:$BASE_IMAGE_TAG as builder
 

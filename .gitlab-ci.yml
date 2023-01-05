@@ -6,7 +6,7 @@ include:
 variables:
   MTR_TARGET_IMAGE:   iris
   MTR_TARGET_TAG:     $CI_COMMIT_REF_NAME
-  MTR_BASE_IMAGE_TAG: '20.0.1'
+  MTR_BASE_IMAGE_TAG: '20.0.2'
 
 stages:
 - copy
