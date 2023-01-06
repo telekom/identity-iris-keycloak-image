@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.0.0
+* Keycloak updated to 20.0.2
+
+## 2.0.3
+* Updated enilogin login theme
+
 ## 2.0.2
 * Added enilogin login theme
 
