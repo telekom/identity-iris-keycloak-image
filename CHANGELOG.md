@@ -1,5 +1,8 @@
 # Changelog
 
+## 3.1.0
+* ENI-Login: Added option to remember IDP selection 
+
 ## 3.0.0
 * Keycloak updated to 20.0.2
 
