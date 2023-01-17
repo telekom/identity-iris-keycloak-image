@@ -7,6 +7,34 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="robots" content="noindex, nofollow">
 
+    <script type="text/javascript">
+    let kcIdpHintKey = "kc_idp_hint";
+
+    function getCookie(cookieName) {
+        let cookie = {};
+        document.cookie.split(';').forEach(function(el) {
+            let [key,value] = el.split('=');
+            cookie[key.trim()] = value;
+        })
+        return cookie[cookieName];
+    }
+
+    function setSelectedIdp(selectedIdp) {
+        if(document.getElementById("kc-idpRememberChoice").checked) {
+            document.cookie = kcIdpHintKey + "=" + selectedIdp + "; path=/";
+        }
+    }
+
+    function pathHasKcIdpHint() {
+       return window.location.pathname.includes(pathHasKcIdpHint);
+    }
+
+    let kcIdpHintFromCookie = getCookie(kcIdpHintKey);
+    if(! pathHasKcIdpHint() && kcIdpHintFromCookie)  {
+        window.location.replace(window.location.href + "&" + kcIdpHintKey + "=" + kcIdpHintFromCookie);
+    }
+    </script>
+
     <#if properties.meta?has_content>
         <#list properties.meta?split(' ') as meta>
             <meta name="${meta?split('==')[0]}" content="${meta?split('==')[1]}"/>
