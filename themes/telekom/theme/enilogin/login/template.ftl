@@ -8,6 +8,8 @@
     <meta name="robots" content="noindex, nofollow">
 
     <script type="text/javascript">
+    let kcIdpHintKey = "kc_idp_hint";
+
     function getCookie(cookieName) {
         let cookie = {};
         document.cookie.split(';').forEach(function(el) {
@@ -18,14 +20,18 @@
     }
 
     function setSelectedIdp(selectedIdp) {
-        if(document.getElementById("kc-idpRememberChoice").checked == true) {
-            document.cookie = "kc_idp_hint=" + selectedIdp + "; path=/";
+        if(document.getElementById("kc-idpRememberChoice").checked) {
+            document.cookie = kcIdpHintKey + "=" + selectedIdp + "; path=/";
         }
     }
 
-    let kcIdpHint = getCookie("kc_idp_hint");
-    if(kcIdpHint) {
-        window.location.replace(window.location.href + "&kc_idp_hint=" + kcIdpHint);
+    function pathHasKcIdpHint() {
+       return window.location.pathname.includes(pathHasKcIdpHint);
+    }
+
+    let kcIdpHintFromCookie = getCookie(kcIdpHintKey);
+    if(! pathHasKcIdpHint() && kcIdpHintFromCookie)  {
+        window.location.replace(window.location.href + "&" + kcIdpHintKey + "=" + kcIdpHintFromCookie);
     }
     </script>
 
