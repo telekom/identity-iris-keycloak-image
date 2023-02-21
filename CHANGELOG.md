@@ -1,5 +1,8 @@
 # Changelog
 
+## 3.1.1
+* Fixed ENI-Login loop
+
 ## 3.1.0
 * ENI-Login: Added option to remember IDP selection 
 
