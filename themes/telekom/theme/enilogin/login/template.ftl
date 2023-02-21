@@ -26,7 +26,7 @@
     }
 
     function pathHasKcIdpHint() {
-       return window.location.pathname.includes(pathHasKcIdpHint);
+       return window.location.pathname.includes(kcIdpHintKey);
     }
 
     let kcIdpHintFromCookie = getCookie(kcIdpHintKey);

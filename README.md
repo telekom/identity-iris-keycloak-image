@@ -14,3 +14,15 @@ After deploying the Iris Helm chart this path won't be available because it isn'
 To provide the metrics to the monitoring infrastructure ha-proxy forwards requests from :9542/metrics to Keycloaks metrics.
  
  ![Keycloak Prometheus Integration](img/Keycloak-Prometheus.png "Keycloak Prometheus Integration")
+
+ # Run local development
+
+Follow these steps to run an on-the-fly development Keycloak on your local machine:
+1. Download Keycloak server binaries here: https://www.keycloak.org/downloads
+2. Unzip to desired location
+3. Copy ```enilogin``` theme and ```META-INF``` directory from Iris-Image repo to the unzipped Keycloak/themes.
+
+![Themes placement](img/themes_dev_mode.JPG)
+
+4. Run development mode with ```kc.sh start-dev``` or ```kc.bat start-dev```
+5. Setup a realm using ENI-Login theme. You may also add an identiy provider redirecting to the master realm.
