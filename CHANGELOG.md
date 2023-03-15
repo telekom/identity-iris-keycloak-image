@@ -1,5 +1,8 @@
 # Changelog
 
+## 3.1.2
+* Keycloak updated to 20.0.5
+
 ## 3.1.1
 * Fixed ENI-Login loop
 
