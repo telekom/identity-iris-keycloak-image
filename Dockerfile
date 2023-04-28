@@ -28,7 +28,7 @@ COPY --from=builder /opt/keycloak/ /opt/keycloak/
 USER root
 
 #Update dependencies
-RUN microdnf upgrade --setopt=install_weak_deps=0
+#RUN microdnf upgrade --setopt=install_weak_deps=0
 
 # Used for OpenShift compatibility
 # See: https://docs.openshift.com/container-platform/3.11/creating_images/guidelines.html
