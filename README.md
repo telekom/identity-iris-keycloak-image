@@ -1,7 +1,14 @@
 # Iris Docker Image
 
+## Original Keycloak Image
+Mirror of original Keycloak image from quay.io/keycloak/ to https://mtr.devops.telekom.de/repository/tardis-common/keycloak.
+For the mirroring Process we use: 
+- https://gitlab.devops.telekom.de/dhei/teams/io/templates/gitlab-pipelines/-/blob/develop/docker/gitlab-ci.docker.yml#L502
+- https://gitlab.devops.telekom.de/dhei/teams/io/tools/image-migrator/-/blob/main/.gitlab-ci.yml#L63
+
+## Chart 
 Iris image provided by DHEI and based on Keycloak that comes with selected extensions like a prometheus metrics exporter.  
-This image is meant to be used only with the Iris Helm chart provided by DHEI: [/tif/infra/charts/iris](https://ceiser-wbench.psst.t-online.corp/gitlab/tif/infra/charts/iris)
+This image is meant to be used only with the Iris Helm chart provided by DHEI: [/tif/infra/charts/iris](https://gitlab.devops.telekom.de/dhei/teams/io/products/iris/iris-chart)
 
 ## Extensions
 
