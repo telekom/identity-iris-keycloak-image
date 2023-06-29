@@ -40,7 +40,7 @@ Follow these steps to run an on-the-fly development Keycloak on your local machi
 
 ## Testing eni-login
 
-1. Create a new realm ```eni-login````
+1. Create a new realm ```eni-login```
 2. Configure eni-login realm and set eni-login as theme in ```Realm settings > Themes > Login theme: enilogin```
 3. Add master realm as identity provider to eni-login realm
 
