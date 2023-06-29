@@ -37,3 +37,7 @@ Follow these steps to run an on-the-fly development Keycloak on your local machi
 
 4. Run development mode with ```kc.sh start-dev``` or ```kc.bat start-dev```
 5. Setup a realm using ENI-Login theme. You may also add an identiy provider redirecting to the master realm.
+
+## Reset local setting
+
+Delete the ```h2``` directory in yourour ```keycloak/data``` directory.
