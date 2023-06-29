@@ -48,6 +48,6 @@ Follow these steps to run an on-the-fly development Keycloak on your local machi
 
 If you're done with changes, copy the edited files back to the repository. Final builds will be done by ```build.sh``` run by the ```build:extensions``` job in the pipeline.
 
-## Reset local setting
+## Reset local settings
 
 Delete the ```h2``` directory in yourour ```keycloak/data``` directory.
