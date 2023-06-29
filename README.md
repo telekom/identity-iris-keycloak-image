@@ -28,7 +28,9 @@ To provide the metrics to the monitoring infrastructure ha-proxy forwards reques
  
  ![Keycloak Prometheus Integration](img/Keycloak-Prometheus.png "Keycloak Prometheus Integration")
 
- # Run local development
+ # Local development
+
+ ## Run Keycloak
 
 Follow these steps to run an on-the-fly development Keycloak on your local machine: [original documentation](https://www.keycloak.org/getting-started/getting-started-zip)
 1. Download Keycloak server binaries here: https://www.keycloak.org/downloads
@@ -43,8 +45,17 @@ Follow these steps to run an on-the-fly development Keycloak on your local machi
 ## Testing eni-login
 
 1. Create a new realm ```eni-login```
-2. Configure eni-login realm and set eni-login as theme in ```Realm settings > Themes > Login theme: enilogin```
-3. Add master realm as identity provider to eni-login realm
+2. Add ```enilogin``` and enable ```Client authentication```
+3. Configure eni-login realm and set eni-login as theme in ```Realm settings > Themes > Login theme: enilogin```
+4.Add master realm as identity provider to eni-login realm as ```Keycloak OpenID Connect```
+5. Disable auto discovery and add the followin URLs:\
+   **Authorization URL**: ```http://localhost:8080/auth/realms/master/protocol/openid-connect/auth``` \
+   **Token URL:** ```http://localhost:8080/auth/realms/master/protocol/openid-connect/token```
+6. Add \
+   **Client ID:** ```enilogin```
+   **Client Secret:** ```enilogin-secret``` (from master realm)
+7. Open [http://localhost:8080/realms/enilogin/account/](http://localhost:8080/realms/enilogin/account/) and click on ```Sign in``` \
+   You should see ```keycloak-oidc``` as selectable identity-provider.
 
 ## Publish
 
