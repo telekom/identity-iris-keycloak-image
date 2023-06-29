@@ -1,5 +1,7 @@
 # Iris Docker Image
 
+Target Repo https://mtr.devops.telekom.de/repository/tardis-internal/io/iris
+
 ## Original Keycloak Image
 Mirror of original Keycloak image from quay.io/keycloak/ to https://mtr.devops.telekom.de/repository/tardis-common/keycloak.
 For the mirroring Process we use: 
