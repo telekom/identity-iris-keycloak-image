@@ -16,6 +16,8 @@ This image is meant to be used only with the Iris Helm chart provided by DHEI: [
 
 ### keycloak-metrics-spi
 
+We use the metrics extention from [here](https://github.com/aerogear/keycloak-metrics-spi)
+
 If you deploy the Keycloak by using this image, it will make a new REST endpoint available: ``https://my-keycloak-instance/auth/realms/master/metrics``.  
 From this endpoint you will be able to access all metrics from all(!) realms no matter what realm is in the url.
 
