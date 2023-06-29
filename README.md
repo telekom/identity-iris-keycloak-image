@@ -10,7 +10,7 @@ For the mirroring Process we use:
 
 ## Chart 
 Iris image provided by DHEI and based on Keycloak that comes with selected extensions like a prometheus metrics exporter.  
-This image is meant to be used only with the Iris Helm chart provided by DHEI: [/tif/infra/charts/iris](https://gitlab.devops.telekom.de/dhei/teams/io/products/iris/iris-chart)
+This image is meant to be used only with the Iris Helm chart provided by DHEI: [/io/products/iris/chart/](https://gitlab.devops.telekom.de/dhei/teams/io/products/iris/iris-chart)
 
 ## Extensions
 
