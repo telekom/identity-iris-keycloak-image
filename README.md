@@ -21,7 +21,6 @@ We use the metrics extension from [here](https://github.com/aerogear/keycloak-me
 When you deploy Keycloak using this image, a new REST endpoint is made available:  ``https://my-keycloak-instance/auth/realms/master/metrics``.  
 From this endpoint you will be able to access all metrics from all(!) realms no matter what realm is in the URL.
 
-After deploying the Iris Helm chart this path won't be available because it isn't secured by a password and therefore blocked by ha-proxy. 
 (!) This path is not password-protected. To prevent unauthorized access to the metrics the chart blocks the path by using ha-proxy
 
 To provide the metrics to the monitoring infrastructure ha-proxy forwards requests from :9542/metrics to Keycloaks metrics.
