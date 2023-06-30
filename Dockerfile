@@ -1,5 +1,5 @@
 # this version defines only the default value - real version is set in gitlab-ci
-ARG BASE_IMAGE_TAG=20.0.5
+ARG BASE_IMAGE_TAG=21.1
 
 FROM mtr.devops.telekom.de/tardis-common/keycloak:$BASE_IMAGE_TAG as builder
 
@@ -28,7 +28,7 @@ COPY --from=builder /opt/keycloak/ /opt/keycloak/
 USER root
 
 #Update dependencies
-RUN microdnf upgrade --setopt=install_weak_deps=0
+#RUN microdnf upgrade --setopt=install_weak_deps=0
 
 # Used for OpenShift compatibility
 # See: https://docs.openshift.com/container-platform/3.11/creating_images/guidelines.html
