@@ -33,7 +33,7 @@ To provide the metrics to the monitoring infrastructure ha-proxy forwards reques
 
  ## Run Keycloak
 
-To run an on-the-fly development keycloak on your local machine, follow these steps: [original documentation](https://www.keycloak.org/getting-started/getting-started-zip)
+To run an on-the-fly development Keycloak on your local machine, follow these steps: [original documentation](https://www.keycloak.org/getting-started/getting-started-zip)
 1. Download Keycloak server binaries here: https://www.keycloak.org/downloads
 2. Unzip to desired location
 3. Copy ```enilogin``` theme and ```META-INF``` directory from Iris-Image repo to the unzipped Keycloak/themes.
