@@ -9,8 +9,8 @@ function init() {
 function build_keycloak_metrics_spi_extension() {
   EXTENSION_NAME="keycloak-metrics-spi"
 
-  KEYCLOAK_VERSION="20.0.2"
-  PROMETHEUS_JAVA_SIMPLECLIENT_VERSION="0.9.0"
+  KEYCLOAK_VERSION="21.1.1"
+  PROMETHEUS_JAVA_SIMPLECLIENT_VERSION="0.16.0"
 
   pushd "$EXTENSION_NAME"
     ./gradlew -PkeycloakVersion="$KEYCLOAK_VERSION" -PprometheusVersion="$PROMETHEUS_JAVA_SIMPLECLIENT_VERSION" clean build jar

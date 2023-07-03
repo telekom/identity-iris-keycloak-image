@@ -1,5 +1,5 @@
 # this version defines only the default value - real version is set in gitlab-ci
-ARG BASE_IMAGE_TAG=21.1
+ARG BASE_IMAGE_TAG=21.1.2
 
 FROM mtr.devops.telekom.de/tardis-common/keycloak:$BASE_IMAGE_TAG as builder
 
