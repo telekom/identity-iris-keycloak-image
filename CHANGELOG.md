@@ -1,7 +1,8 @@
 # Changelog
 
 ## 3.2.0
-* Keycloak updated to 21.1
+* Keycloak updated to 21.1.2
+* keycloak-metrics-spi updated to 3.0.0 (prometheusVersion updated to 0.16.0)
 
 ## 3.1.2
 * Keycloak updated to 20.0.5
