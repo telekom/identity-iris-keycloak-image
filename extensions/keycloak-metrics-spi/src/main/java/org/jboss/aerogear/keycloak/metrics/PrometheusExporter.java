@@ -3,6 +3,7 @@ package org.jboss.aerogear.keycloak.metrics;
 import io.prometheus.client.CollectorRegistry;
 import io.prometheus.client.Counter;
 import io.prometheus.client.Histogram;
+import io.prometheus.client.exporter.BasicAuthHttpConnectionFactory;
 import io.prometheus.client.exporter.PushGateway;
 import io.prometheus.client.exporter.common.TextFormat;
 import io.prometheus.client.hotspot.DefaultExports;
@@ -154,42 +155,42 @@ public final class PrometheusExporter {
         final boolean URI_METRICS_ENABLED = Boolean.parseBoolean(System.getenv("URI_METRICS_ENABLED"));
         if (URI_METRICS_ENABLED){
             responseTotal = Counter.build()
-            .name("keycloak_response")
-            .help("Total number of responses")
-            .labelNames("code", "method", "resource", "uri")
-            .register();
+                .name("keycloak_response")
+                .help("Total number of responses")
+                .labelNames("code", "method", "resource", "uri")
+                .register();
 
             responseErrors = Counter.build()
-            .name("keycloak_response_errors")
-            .help("Total number of error responses")
-            .labelNames("code", "method", "resource", "uri")
-            .register();
+                .name("keycloak_response_errors")
+                .help("Total number of error responses")
+                .labelNames("code", "method", "resource", "uri")
+                .register();
 
             requestDuration = Histogram.build()
-            .name("keycloak_request_duration")
-            .help("Request duration")
-            .buckets(50, 100, 250, 500, 1000, 2000, 10000, 30000)
-            .labelNames("code", "method", "resource", "uri")
-            .register();
+                .name("keycloak_request_duration")
+                .help("Request duration")
+                .buckets(50, 100, 250, 500, 1000, 2000, 10000, 30000)
+                .labelNames("code", "method", "resource", "uri")
+                .register();
         } else {
             responseTotal = Counter.build()
-            .name("keycloak_response")
-            .help("Total number of responses")
-            .labelNames("code", "method", "resource")
-            .register();
+                .name("keycloak_response")
+                .help("Total number of responses")
+                .labelNames("code", "method", "resource")
+                .register();
 
             responseErrors = Counter.build()
-            .name("keycloak_response_errors")
-            .help("Total number of error responses")
-            .labelNames("code", "method", "resource")
-            .register();
+                .name("keycloak_response_errors")
+                .help("Total number of error responses")
+                .labelNames("code", "method", "resource")
+                .register();
 
             requestDuration = Histogram.build()
-            .name("keycloak_request_duration")
-            .help("Request duration")
-            .buckets(50, 100, 250, 500, 1000, 2000, 10000, 30000)
-            .labelNames("code", "method", "resource")
-            .register();
+                .name("keycloak_request_duration")
+                .help("Request duration")
+                .buckets(50, 100, 250, 500, 1000, 2000, 10000, 30000)
+                .labelNames("code", "method", "resource")
+                .register();
         }
 
         // Counters for all user events
@@ -491,7 +492,7 @@ public final class PrometheusExporter {
     private String getRealmName(String realmId, RealmProvider realmProvider) {
         RealmModel realm = null;
         if (realmId != null) {
-             realm = realmProvider.getRealm(realmId);
+            realm = realmProvider.getRealm(realmId);
         }
         if (realm != null) {
             return realm.getName();
@@ -530,6 +531,12 @@ public final class PrometheusExporter {
                 logger.info("Pushgateway created with url " + host + ".");
             } catch (MalformedURLException e) {
                 throw new RuntimeException(e);
+            }
+            String basic_auth_username = System.getenv("PROMETHEUS_PUSHGATEWAY_BASIC_AUTH_USERNAME");
+            String basic_auth_password = System.getenv("PROMETHEUS_PUSHGATEWAY_BASIC_AUTH_PASSWORD");
+            if (basic_auth_username != null && basic_auth_password != null) {
+                logger.info("Enabled basic auth for pushgateway.");
+                pg.setConnectionFactory(new BasicAuthHttpConnectionFactory(basic_auth_username, basic_auth_password));
             }
         }
         return pg;

@@ -16,7 +16,7 @@ identity provider with custom extensions. This _IKI_ comes with selected
 
 Use original Keycloak image from quay.io/keycloak/ or mirror it if needed
 to your specific repository and provide its destination inside the Dockerfile. In this version the Keycloak image with
-tag **21.1.2** is used.
+tag **26.0.8** is used.
 
 ## Chart
 
@@ -27,6 +27,7 @@ It's intended to be used with the Helm chart provided in the [gitHub repo](https
 ### keycloak-metrics-spi
 
 There are the metrics extension used [keycloak-metrics-spi](https://github.com/aerogear/keycloak-metrics-spi).
+The extension has not been modified and is used as is.
 
 When you deploy Keycloak using this image, a new REST endpoint is made
 available: `https://my-keycloak-instance/auth/realms/master/metrics`.  

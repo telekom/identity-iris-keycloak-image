@@ -5,33 +5,26 @@
 # SPDX-License-Identifier: Apache-2.0
 
 LIBS_DIR="./../providers"
+KEYCLOAK_VERSION="$1"
+if [ -z "$KEYCLOAK_VERSION"  ]; then
+        echo "Keycloak version not specified"
+	exit 1
+fi
 
 function init() {
   mkdir -p "$LIBS_DIR"
 }
 
-function build_keycloak_metrics_spi_extension() {
-  EXTENSION_NAME="keycloak-metrics-spi"
+function build_keycloak_extension() {
+  EXTENSION_NAME="$1"
 
-  KEYCLOAK_VERSION="21.1.2"
-  PROMETHEUS_JAVA_SIMPLECLIENT_VERSION="0.16.0"
-
-  pushd "$EXTENSION_NAME"
-    ./gradlew -PkeycloakVersion="$KEYCLOAK_VERSION" -PprometheusVersion="$PROMETHEUS_JAVA_SIMPLECLIENT_VERSION" clean build jar
-
-    if [ $? -ne 0 ]; then FAILED=true; fi 
-  popd
-
-  if [ -n "$FAILED" ]; then 
-    echo
-    echo "Error: Failed to build extension $EXTENSION_NAME"
-    echo 
-
-    exit 1
-  fi
-
-  cp -a "$EXTENSION_NAME/build/libs/." "$LIBS_DIR/"
+  echo "Building $EXTENSION_NAME for Keycloak version $KEYCLOAK_VERSION"
+  ./$EXTENSION_NAME/gradlew clean build --daemon -p ./$EXTENSION_NAME -PkeycloakVersion="$KEYCLOAK_VERSION" &&  \
+	  cp -a "$EXTENSION_NAME/build/libs/." "$LIBS_DIR/" && \
+	  return 0
+echo "Error: Failed to build extension $EXTENSION_NAME"
+exit 1
 }
 
 init && \
-build_keycloak_metrics_spi_extension
+build_keycloak_extension keycloak-metrics-spi

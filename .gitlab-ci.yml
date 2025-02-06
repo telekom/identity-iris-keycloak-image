@@ -6,6 +6,7 @@
 image: $IMAGE_DOCKER_BUILD
 
 variables:
+  BASE_IMAGE_TAG: '26.0.8'
   IMAGE_DOCKER_BUILD: 'docker:19.03.8'
   TBP_IMAGE_TAG: ''
   TBP_IMAGE_REGISTRY: ''
@@ -14,18 +15,22 @@ stages:
 - prepare
 - dockerize
 
+.add_alpine_packages: &add_alpine_packages |
+  apk add --no-cache bash
+
 build:extensions:
-  image: openjdk:15-jdk-alpine
+  image: openjdk:17-jdk-alpine
   stage: prepare
   script:
-  - apk add --no-cache bash
-  - cd extensions && ./build.sh
-  - cd ./../themes && chmod +x build.sh && ./build.sh
+    - *add_alpine_packages
+    - cd extensions && chmod +x build.sh && chmod +x ./keycloak-metrics-spi/gradlew
+    - ./build.sh $MTR_BASE_IMAGE_TAG
+    - cd ./../themes && chmod +x build.sh && ./build.sh
   artifacts:
     paths:
-    - "$CI_PROJECT_DIR/providers/"
-    - "$CI_PROJECT_DIR/themes/"
-  
+      - "$CI_PROJECT_DIR/providers/"
+      - "$CI_PROJECT_DIR/themes/"
+
 build:image:
   stage: dockerize
   script:

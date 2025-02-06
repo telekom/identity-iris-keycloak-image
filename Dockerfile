@@ -2,28 +2,23 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-#desired version of Keycloak
-ARG BASE_IMAGE_TAG=21.1.2
+# Keycloak version set in gitlab-ci
+ARG BASE_IMAGE_TAG
 
 FROM quay.io/keycloak/keycloak:$BASE_IMAGE_TAG AS builder
 
 LABEL description="Keycloak Docker image bundled with extensions"
 
-# Enable health and metrics support
-ENV KC_HEALTH_ENABLED=true
-ENV KC_METRICS_ENABLED=true
-ENV KC_CACHE_STACK=kubernetes
-
-# Configure a database vendor
-ENV KC_DB=postgres
-ENV KC_HTTP_RELATIVE_PATH=/auth
-
 ADD providers /opt/keycloak/providers/
 
-ADD themes /opt/keycloak/providers/
-
 WORKDIR /opt/keycloak
-RUN /opt/keycloak/bin/kc.sh build --cache=ispn
+
+# Enable health and metrics support
+# Enable legacy observability interface
+# Configure HTTP relative path
+# Use postgres as database
+
+RUN /opt/keycloak/bin/kc.sh build --db=postgres --http-relative-path=/auth --metrics-enabled=true --health-enabled=true --legacy-observability-interface=true --features-disabled=persistent-user-sessions
 
 FROM quay.io/keycloak/keycloak:$BASE_IMAGE_TAG
 COPY --from=builder /opt/keycloak/ /opt/keycloak/
