@@ -18,7 +18,13 @@ WORKDIR /opt/keycloak
 # Configure HTTP relative path
 # Use postgres as database
 
-RUN /opt/keycloak/bin/kc.sh build --db=postgres --http-relative-path=/auth --metrics-enabled=true --health-enabled=true --legacy-observability-interface=true --features-disabled=persistent-user-sessions
+RUN /opt/keycloak/bin/kc.sh build \
+    --db=postgres \
+    --http-relative-path=/auth \
+    --metrics-enabled=true \
+    --health-enabled=true \
+    --legacy-observability-interface=true \
+    --features-disabled=persistent-user-sessions
 
 FROM quay.io/keycloak/keycloak:$BASE_IMAGE_TAG
 COPY --from=builder /opt/keycloak/ /opt/keycloak/
