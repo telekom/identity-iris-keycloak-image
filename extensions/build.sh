@@ -7,7 +7,7 @@
 LIBS_DIR="./../providers"
 KEYCLOAK_VERSION="$1"
 if [ -z "$KEYCLOAK_VERSION"  ]; then
-        echo "Keycloak version not specified"
+    echo "Keycloak version not specified"
 	exit 1
 fi
 

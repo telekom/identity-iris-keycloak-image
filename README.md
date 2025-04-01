@@ -121,7 +121,7 @@ This job will build the _IKI_ using Docker commands. It uses the artifacts creat
 
 To build IKI, simply follow the steps outlined in the GitLab example.
 
-1. **Build Extensions**: Execute the `build.sh` script located in the `extensions` directory. This will generate
+1. **Build Extensions**: Execute the `build.sh` script located in the `extensions` directory while passing the version to it. (For example: `build.sh "26.0.8"`). This will generate
    a new directory named `providers`.
 2. **Build Themes**: If you have custom themes, run the `build.sh` script within the `themes` directory. This will
    generate a new directory named `themes`.
@@ -131,10 +131,10 @@ To build IKI, simply follow the steps outlined in the GitLab example.
 ### Multi-stage Docker build
 
 Alternatively, you can use the multi-stage Docker build to build the image. This will build the extensions and themes in
-the first stage and then copy them into the final image.
+the first stage and then copy them into the final image. Don't forget to change/add the correct KEYCLOAK_VERSION in build arg.
 
 ```bash
-  docker build --platform linux/amd64 -t iris -f Dockerfile.multi-stage .
+  docker build --platform linux/amd64 --build-arg=BASE_IMAGE_TAG=${KEYCLOAK_VERSION} -t iris -f Dockerfile.multi-stage .
 ```
 
 ## Code of Conduct
