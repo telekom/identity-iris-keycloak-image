@@ -25,8 +25,6 @@ LABEL description="Keycloak Docker image bundled with extensions"
 
 COPY --from=extensionbuilder /app/providers/ /opt/keycloak/providers/
 
-ADD themes /opt/keycloak/providers/
-
 WORKDIR /opt/keycloak
 
 RUN /opt/keycloak/bin/kc.sh build \
