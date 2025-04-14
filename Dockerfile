@@ -5,18 +5,29 @@
 # Keycloak version set in gitlab-ci
 ARG BASE_IMAGE_TAG
 
+
+FROM openjdk:17-jdk-slim AS extensionbuilder
+
+# Need to declare it again here, so we can pass it to build.sh
+ARG BASE_IMAGE_TAG
+
+RUN apt-get install -y bash && \
+mkdir -p /app/providers
+
+ADD extensions /app/extensions/
+WORKDIR /app/extensions
+
+RUN ./build.sh $BASE_IMAGE_TAG
+
 FROM quay.io/keycloak/keycloak:$BASE_IMAGE_TAG AS builder
 
 LABEL description="Keycloak Docker image bundled with extensions"
 
-ADD providers /opt/keycloak/providers/
+COPY --from=extensionbuilder /app/providers/ /opt/keycloak/providers/
+
+ADD themes /opt/keycloak/providers/
 
 WORKDIR /opt/keycloak
-
-# Enable health and metrics support
-# Enable legacy observability interface
-# Configure HTTP relative path
-# Use postgres as database
 
 RUN /opt/keycloak/bin/kc.sh build \
     --db=postgres \
@@ -27,8 +38,9 @@ RUN /opt/keycloak/bin/kc.sh build \
     --features-disabled=persistent-user-sessions
 
 FROM quay.io/keycloak/keycloak:$BASE_IMAGE_TAG
+
+
 COPY --from=builder /opt/keycloak/ /opt/keycloak/
 
-USER root
-
 USER 1000
+

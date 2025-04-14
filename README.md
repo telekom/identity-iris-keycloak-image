@@ -134,7 +134,7 @@ Alternatively, you can use the multi-stage Docker build to build the image. This
 the first stage and then copy them into the final image. Don't forget to change/add the correct KEYCLOAK_VERSION in build arg.
 
 ```bash
-  docker build --platform linux/amd64 --build-arg=BASE_IMAGE_TAG=${KEYCLOAK_VERSION} -t iris -f Dockerfile.multi-stage .
+  docker build --platform linux/amd64 --build-arg=BASE_IMAGE_TAG=${KEYCLOAK_VERSION} -t iris .
 ```
 
 ## Code of Conduct
