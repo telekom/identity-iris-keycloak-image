@@ -7,7 +7,7 @@
 LIBS_DIR="./../providers"
 KEYCLOAK_VERSION="$1"
 if [ -z "$KEYCLOAK_VERSION"  ]; then
-    echo "Keycloak version not specified"
+        echo "Keycloak version not specified"
 	exit 1
 fi
 
@@ -27,4 +27,5 @@ exit 1
 }
 
 init && \
-build_keycloak_extension keycloak-metrics-spi
+build_keycloak_extension keycloak-metrics-spi && \
+build_keycloak_extension client-auth-method-spi 
