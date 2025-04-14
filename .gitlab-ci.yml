@@ -2,39 +2,7 @@
 #
 # SPDX-License-Identifier: CC0-1.0
 
-# variables with TBP_ (to be provided) prefix must be modified accordingly
-image: $IMAGE_DOCKER_BUILD
-
-variables:
-  BASE_IMAGE_TAG: '26.0.8'
-  IMAGE_DOCKER_BUILD: 'docker:19.03.8'
-  TBP_IMAGE_TAG: ''
-  TBP_IMAGE_REGISTRY: ''
-
-stages:
-- prepare
-- dockerize
-
-.add_alpine_packages: &add_alpine_packages |
-  apk add --no-cache bash
-
-build:extensions:
-  image: openjdk:17-jdk-alpine
-  stage: prepare
-  script:
-    - *add_alpine_packages
-    - cd extensions && chmod +x build.sh && chmod +x ./keycloak-metrics-spi/gradlew
-    - ./build.sh $MTR_BASE_IMAGE_TAG
-    - cd ./../themes && chmod +x build.sh && ./build.sh
-  artifacts:
-    paths:
-      - "$CI_PROJECT_DIR/providers/"
-      - "$CI_PROJECT_DIR/themes/"
-
-build:image:
-  stage: dockerize
-  script:
-    - docker build --no-cache -t $TBP_IMAGE_REGISTRY:$TBP_IMAGE_TAG .
-    - docker push $TBP_IMAGE_REGISTRY:$TBP_IMAGE_TAG
-  dependencies:
-  - build:extensions
+include:
+  - project: 'dhei/teams/io/templates/gitlab-pipelines'
+    file: '/docker/gitlab-ci.iris-keycloak.yml'
+    ref: develop
