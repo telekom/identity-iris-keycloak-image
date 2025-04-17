@@ -1,5 +1,9 @@
 #!/bin/sh
 
+# SPDX-FileCopyrightText: © 2024 Gradle, Inc. All rights reserved. Gradle is a trademark of Gradle, Inc.
+#
+# SPDX-License-Identifier: Apache-2.0
+
 #
 # Copyright © 2015-2021 the original authors.
 #
