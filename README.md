@@ -55,87 +55,27 @@ steps: [original documentation](https://www.keycloak.org/getting-started/getting
 4. Set up a realm. You may also add an identity provider redirecting to the master
    realm.
 
-### Testing login
-
-1. **Create a New Realm (`any-login`):**
-
-- Log in to your Keycloak Admin Console.
-- Click on the "Add realm" button in the top left corner.
-- Click on the "Create realm" button
-- Create realm with `any-login` name
-
-2. **Create a New Confidential Client in the Master Realm:**
-
-- From the Keycloak Admin Console, select the "Master" realm from the realm dropdown on the top left.
-- Go to "Clients" on the left-hand sidebar and click on the "Create" button.
-- Enter the following details for the new client:
-    - Client ID: `anylogin`
-    - Enable `Client authentication` option and disable `Direct access grants` option on the `Capability config` tab
-    - Save the client settings.
-
-3. **Add Master Realm as Identity Provider to any-login Realm:**
-
-- In the "any-login" realm, go to the "Identity Providers" section on the left-hand sidebar.
-- Click on the "Add provider" dropdown and select "Keycloak OpenID Connect."
-- In the settings, configure as follows:
-    - Name: `master-realm`
-    - Disable `Use discovery endpoint` option to manually configure URLs.
-    - Authorization URL: `<host>:<port>/realms/master/protocol/openid-connect/auth`
-    - Token URL: `<host>:<port>/realms/master/protocol/openid-connect/token`
-    - Client ID: `anylogin`
-    - Client Secret: `anylogin-secret` (This is the Client Secret from the previously created "anylogin" client in the
-      Master realm.)
-    - Save the configuration.
-
-4. **Open any-login Account Page and Sign In:**
-
-- Go to [http://localhost:8080/realms/any-login/account/](http://localhost:8080/realms/any-login/account/) in your web
-  browser.
-- Click on the "Sign in" button.
-- You should see "keycloak-oidc" as a selectable identity provider.
-
 ## Reset local settings
 
 Delete the `h2` directory in your `keycloak/data` directory.
 
 ## Build
 
-### GitLab Pipeline (example)
-
-To build _IKI_ inside the GitLab pipeline look at the provided `.gitlab-ci.yml` which will have a jobs
-called `build:extensions` and `build:image`. These steps will build the extensions and the Keycloak image together into
-one Docker image.
-
-### build:extensions
-
-This job will build the extensions and themes and then provide these as artifacts (providers and themes) inside the pipeline.
-These artifacts can then be used for ongoing steps and are needed to build the Docker image.
-
-### build:image
-
-This job will build the _IKI_ using Docker commands. It uses the artifacts created with `build:extensions`.
-
-**You still need to provide your registry path (authorization for it) etc. (variables marked with TBP prefix)**
-
 ### Local
 
-To build IKI, simply follow the steps outlined in the GitLab example.
+You can build the Keycloak image locally using a **multi-stage Docker build**, which builds the extensions and creates the final image in one step — no manual steps or copying needed.
 
-1. **Build Extensions**: Execute the `build.sh` script located in the `extensions` directory while passing the version to it. (For example: `build.sh "26.0.8"`). This will generate
-   a new directory named `providers`.
-2. **Build Themes**: If you have custom themes, run the `build.sh` script within the `themes` directory. This will
-   generate a new directory named `themes`.
-3. **Configure Docker**: Adjust the `Dockerfile` to reflect the desired image and configuration settings.
-4. **Docker Image Build**: Proceed to build the Docker image.
+This build process includes:
+- Building all custom **Keycloak extensions**, such as `keycloak-metrics-spi` and `client-auth-method-spi`
+- Packaging the compiled extensions directly into the final Keycloak image
 
-### Multi-stage Docker build
-
-Alternatively, you can use the multi-stage Docker build to build the image. This will build the extensions and themes in
-the first stage and then copy them into the final image. Don't forget to change/add the correct KEYCLOAK_VERSION in build arg.
+To run the build:
 
 ```bash
-  docker build --platform linux/amd64 --build-arg=BASE_IMAGE_TAG=${KEYCLOAK_VERSION} -t iris .
+docker build --build-arg=BASE_IMAGE_TAG=${KEYCLOAK_VERSION} -t iris .
 ```
+
+💡 You can add` --platform=linux/amd64` flag if you're building on a non-amd64 machine. On most systems, it's safe to omit it.
 
 ## Code of Conduct
 
