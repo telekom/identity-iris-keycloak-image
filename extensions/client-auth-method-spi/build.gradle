@@ -1,0 +1,48 @@
+//SPDX-FileCopyrightText: 2023 Deutsche Telekom AG
+//
+//SPDX-License-Identifier: Apache-2.0
+
+import java.text.SimpleDateFormat
+
+plugins {
+    id "net.nemerosa.versioning" version "3.0.0"
+    id "java"
+}
+
+group 'de.telekom.eis.keycloak'
+version '1.0.0'
+
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+}
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    keycloakVersion = project.properties["keycloakVersion"]
+    prometheusVersion = project.properties["prometheusVersion"]
+}
+
+
+dependencies {
+    implementation group: 'org.keycloak', name: 'keycloak-server-spi-private', version: keycloakVersion
+    implementation group: 'org.keycloak', name: 'keycloak-server-spi', version: keycloakVersion
+    implementation group: 'org.keycloak', name: 'keycloak-services', version: keycloakVersion
+    implementation group: 'io.prometheus', name: 'simpleclient_common', version: prometheusVersion
+}
+
+jar {
+    manifest {
+        attributes(
+            'Build-Timestamp': new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").format(new Date()),
+            'Build-Revision': versioning.info.commit,
+            'Created-By': "Gradle ${gradle.gradleVersion}",
+            'Build-Jdk': "${System.properties['java.version']} (${System.properties['java.vendor']} ${System.properties['java.vm.version']})",
+            'Build-OS': "${System.properties['os.name']} ${System.properties['os.arch']} ${System.properties['os.version']}",
+            'Version': "${gradle.rootProject.version}"
+        )
+    }
+}
