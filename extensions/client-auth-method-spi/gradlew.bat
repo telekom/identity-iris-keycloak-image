@@ -1,3 +1,7 @@
+@rem SPDX-FileCopyrightText: Copyright © 2024 Gradle, Inc. All rights reserved. Gradle is a trademark of Gradle, Inc.
+@rem
+@rem SPDX-License-Identifier: Apache-2.0
+
 @rem
 @rem Copyright 2015 the original author or authors.
 @rem
