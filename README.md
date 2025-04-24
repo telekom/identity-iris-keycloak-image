@@ -59,23 +59,30 @@ steps: [original documentation](https://www.keycloak.org/getting-started/getting
 
 Delete the `h2` directory in your `keycloak/data` directory.
 
-## Build
+### Local Build
 
-### Local
-
-You can build the Keycloak image locally using a **multi-stage Docker build**, which builds the extensions and creates the final image in one step — no manual steps or copying needed.
+You can build the Keycloak image locally using a **multi-stage Docker build**, which compiles custom extensions and
+packages them into the final image — no manual steps required.
 
 This build process includes:
+
 - Building all custom **Keycloak extensions**, such as `keycloak-metrics-spi` and `client-auth-method-spi`
 - Packaging the compiled extensions directly into the final Keycloak image
 
 To run the build:
 
 ```bash
-docker build --build-arg=BASE_IMAGE_TAG=${KEYCLOAK_VERSION} -t iris .
+docker build -t iris .
 ```
 
-💡 You can add` --platform=linux/amd64` flag if you're building on a non-amd64 machine. On most systems, it's safe to omit it.
+By default, the image uses the Keycloak version specified in the Dockerfile (`BASE_IMAGE_TAG`). If you want to override
+it:
+
+```bash
+docker build --build-arg BASE_IMAGE_TAG=24.0.2 -t iris .
+```
+
+💡 On non-amd64 machines, you may need to add `--platform=linux/amd64`. On most systems, it’s safe to omit it.
 
 ## Code of Conduct
 

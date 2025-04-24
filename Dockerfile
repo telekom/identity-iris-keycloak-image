@@ -3,8 +3,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 # Keycloak version set in gitlab-ci
-ARG BASE_IMAGE_TAG
-
+ARG BASE_IMAGE_TAG=26.0.8
 
 FROM openjdk:17-jdk-slim AS extensionbuilder
 
