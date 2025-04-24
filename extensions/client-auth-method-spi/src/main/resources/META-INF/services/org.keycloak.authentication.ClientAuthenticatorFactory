@@ -1,0 +1,8 @@
+#SPDX-FileCopyrightText: 2023 Deutsche Telekom AG
+#
+#SPDX-License-Identifier: Apache-2.0
+
+de.telekom.keycloak.authentication.authenticators.client.TracingClientIdAndSecretAuthenticator
+org.keycloak.authentication.authenticators.client.JWTClientAuthenticator
+org.keycloak.authentication.authenticators.client.JWTClientSecretAuthenticator
+org.keycloak.authentication.authenticators.client.X509ClientAuthenticator

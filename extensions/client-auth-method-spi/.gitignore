@@ -1,0 +1,18 @@
+# SPDX-FileCopyrightText: 2025 Deutsche Telekom AG
+#
+# SPDX-License-Identifier: CC0-1.0
+
+build
+.gradle
+*.iml
+.idea
+out/
+bin/
+.project
+.settings/org.eclipse.buildship.core.prefs
+.project
+.classpath
+.project
+.settings/org.eclipse.jdt.core.prefs
+/dependency-reduced-pom.xml
+target
