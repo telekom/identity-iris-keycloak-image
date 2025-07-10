@@ -31,7 +31,6 @@ RUN /opt/keycloak/bin/kc.sh build \
     --http-relative-path=/auth \
     --metrics-enabled=true \
     --health-enabled=true \
-    --legacy-observability-interface=true \
     --features-disabled=persistent-user-sessions
 
 FROM quay.io/keycloak/keycloak:$BASE_IMAGE_TAG
