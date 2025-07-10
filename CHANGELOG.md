@@ -4,6 +4,12 @@ SPDX-FileCopyrightText: 2025 Deutsche Telekom AG
 SPDX-License-Identifier: CC0-1.0    
 -->
 
+## [1.1.2]
+### Changed
+- Removed `--legacy-observability-interface` option from the `Dockerfile` to align with updated Keycloak management interface practices. See: https://www.keycloak.org/server/management-interface#_disable_management_interface
+
+---
+
 ## [1.1.1] 
 ### Changed
 - Refactored image build process to use a unified multi-stage `Dockerfile`.
