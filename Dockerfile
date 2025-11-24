@@ -5,13 +5,13 @@
 # Keycloak version set in gitlab-ci
 ARG BASE_IMAGE_TAG=26.0.8
 
-FROM openjdk:17-jdk-slim AS extensionbuilder
+FROM eclipse-temurin:21.0.9_10-jdk-alpine-3.22 AS extensionbuilder
 
 # Need to declare it again here, so we can pass it to build.sh
 ARG BASE_IMAGE_TAG
 
-RUN apt-get install -y bash && \
-mkdir -p /app/providers
+RUN apk add --no-cache bash && \
+    mkdir -p /app/providers
 
 ADD extensions /app/extensions/
 WORKDIR /app/extensions
