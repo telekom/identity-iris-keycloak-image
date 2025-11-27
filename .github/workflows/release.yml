@@ -51,8 +51,8 @@ jobs:
         id: dry-run
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npx semantic-release --dry-run --extends ./.github/config/release.yaml
+        run: npx semantic-release --dry-run --extends ./.github/config/release.js
       - name: Run Semantic Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npx semantic-release --config ./.github/config/release.yaml
+        run: npx semantic-release --config ./.github/config/release.js
