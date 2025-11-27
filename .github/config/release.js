@@ -3,7 +3,7 @@
 //  SPDX-License-Identifier: Apache-2.0
 
 export default {
-    branches: ['main', 'action-release'],
+    branches: ['main'],
     tagFormat: '${version}',
     repositoryUrl: 'git@github.com:telekom/identity-iris-keycloak-image.git',
     plugins: [
