@@ -4,9 +4,6 @@
 
 name: Release
 on:
-  push:
-    branches:
-      - '**'
   workflow_dispatch:
     inputs:
       do_release:
