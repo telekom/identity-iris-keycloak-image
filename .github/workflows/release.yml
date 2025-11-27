@@ -51,30 +51,8 @@ jobs:
         id: dry-run
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npx semantic-release --dry-run
+        run: npx semantic-release --dry-run --config .github/config/release.config.js
       - name: Run Semantic Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npx semantic-release
-
-  trigger-ci:
-    runs-on: ubuntu-latest
-    needs: release
-    permissions:
-      actions: write
-    steps:
-      - name: Trigger build
-        uses: actions/github-script@v7
-        with:
-          script: |
-            await github.rest.actions.createWorkflowDispatch({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              workflow_id: 'build.yml',
-              ref: context.ref,
-              inputs: {
-                tag: '${{ needs.release.outputs.new-release-version }}'
-              }
-            });
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npx semantic-release --config .github/config/release.config.js
