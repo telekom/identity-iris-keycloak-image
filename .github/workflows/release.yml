@@ -4,6 +4,9 @@
 
 name: Release
 on:
+  push:
+    branches:
+      - '**'
   workflow_dispatch:
     inputs:
       do_release:
@@ -17,7 +20,7 @@ on:
 
 jobs:
   release:
-    if: ${{ github.ref == 'refs/heads/main' && github.event.inputs.do_release == 'yes' }}
+    if: ${{ github.ref == 'refs/heads/action-release' }}
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -57,7 +60,6 @@ jobs:
   trigger-ci:
     runs-on: ubuntu-latest
     needs: release
-    if: needs.release.outputs.new-release-published == 'true'
     permissions:
       actions: write
     steps:
