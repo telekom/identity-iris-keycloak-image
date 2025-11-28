@@ -5,6 +5,13 @@
 
 * use eclipse temurin instead openjdk ([#10](https://github.com/telekom/identity-iris-keycloak-image/issues/10)) ([c09636d](https://github.com/telekom/identity-iris-keycloak-image/commit/c09636d1fa019ddfa2b474a8a64be5736c1b9216))
 
+# [1.2.0](https://github.com/telekom/identity-iris-keycloak-image/compare/1.1.2...1.2.0) (2025-11-28)
+
+
+### Features
+
+* use eclipse temurin instead openjdk ([#10](https://github.com/telekom/identity-iris-keycloak-image/issues/10)) ([c09636d](https://github.com/telekom/identity-iris-keycloak-image/commit/c09636d1fa019ddfa2b474a8a64be5736c1b9216))
+
 <!--
 SPDX-FileCopyrightText: 2025 Deutsche Telekom AG
 
