@@ -4,6 +4,19 @@ SPDX-FileCopyrightText: 2025 Deutsche Telekom AG
 SPDX-License-Identifier: CC0-1.0    
 -->
 
+# [1.3.0](https://github.com/telekom/identity-iris-keycloak-image/compare/1.2.0...1.3.0) (2025-12-08)
+
+
+### Bug Fixes
+
+* remove helm plugin from release workflow ([b7f68ba](https://github.com/telekom/identity-iris-keycloak-image/commit/b7f68baa28b7653824f52a53b8916fa44f08c414))
+
+
+### Features
+
+* support graceful client secret rotation ([ba834aa](https://github.com/telekom/identity-iris-keycloak-image/commit/ba834aa2ac8d8488f21baa79e29e8bd2795444ed))
+* support graceful secret rotation ([1035a30](https://github.com/telekom/identity-iris-keycloak-image/commit/1035a306555d4ec56ad74f1e43b2f8bee3d66fa9))
+
 # [1.2.0](https://github.com/telekom/identity-iris-keycloak-image/compare/1.1.2...1.2.0) (2025-11-28)
 
 
