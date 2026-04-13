@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 # Keycloak version set in gitlab-ci
-ARG BASE_IMAGE_TAG=26.5.6
+ARG BASE_IMAGE_TAG=26.5.7
 
 FROM eclipse-temurin:21.0.10_7-jdk-alpine-3.23 AS extensionbuilder
 
@@ -40,4 +40,3 @@ FROM quay.io/keycloak/keycloak:$BASE_IMAGE_TAG
 COPY --from=builder /opt/keycloak/ /opt/keycloak/
 
 USER 1000
-
