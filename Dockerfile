@@ -9,6 +9,7 @@ FROM eclipse-temurin:21.0.10_7-jdk-alpine-3.23 AS extensionbuilder
 
 # Need to declare it again here, so we can pass it to build.sh
 ARG BASE_IMAGE_TAG
+ARG EXTENSIONS="client-auth-method-spi,keycloak-metrics-spi"
 
 RUN apk add --no-cache bash && \
     mkdir -p /app/providers
@@ -16,7 +17,7 @@ RUN apk add --no-cache bash && \
 ADD extensions /app/extensions/
 WORKDIR /app/extensions
 
-RUN ./build.sh $BASE_IMAGE_TAG
+RUN ./build.sh "${BASE_IMAGE_TAG}" "${EXTENSIONS}"
 
 FROM quay.io/keycloak/keycloak:$BASE_IMAGE_TAG AS builder
 
