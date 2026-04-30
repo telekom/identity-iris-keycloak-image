@@ -30,6 +30,7 @@ RUN /opt/keycloak/bin/kc.sh build \
     --db=postgres \
     --http-relative-path=/auth \
     --metrics-enabled=true \
+    --event-metrics-user-enabled=true \
     --health-enabled=true \
     --features=client-secret-rotation,http-optimized-serializers \
     --feature-account-api=disabled \
