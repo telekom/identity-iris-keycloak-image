@@ -4,6 +4,15 @@ SPDX-FileCopyrightText: 2025 Deutsche Telekom AG
 SPDX-License-Identifier: CC0-1.0    
 -->
 
+# [1.5.0](https://github.com/telekom/identity-iris-keycloak-image/compare/1.4.1...1.5.0) (2026-05-04)
+
+
+### Features
+
+* do extensions as optional ([#20](https://github.com/telekom/identity-iris-keycloak-image/issues/20)) ([3c298b6](https://github.com/telekom/identity-iris-keycloak-image/commit/3c298b69be16946b677cb4a7ffe9c90b6b7e65eb))
+* enable user event metrics ([#19](https://github.com/telekom/identity-iris-keycloak-image/issues/19)) ([a6709e0](https://github.com/telekom/identity-iris-keycloak-image/commit/a6709e06d3fbad45f9d34e4c057589b0fe95da53))
+* optimize features ([#18](https://github.com/telekom/identity-iris-keycloak-image/issues/18)) ([fd7f8ae](https://github.com/telekom/identity-iris-keycloak-image/commit/fd7f8aeeab5368a10191c26cd9b9c5b0f6be3330))
+
 ## [1.4.1](https://github.com/telekom/identity-iris-keycloak-image/compare/1.4.0...1.4.1) (2026-04-14)
 
 
