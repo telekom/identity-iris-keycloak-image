@@ -82,6 +82,12 @@ it:
 docker build --build-arg BASE_IMAGE_TAG=24.0.2 -t iris .
 ```
 
+By default, all extensions are built, as specified in the Dockerfile (`EXTENSIONS`). If you want to override
+
+```bash
+docker build --build-arg EXTENSIONS="client-auth-method-spi" -t iris .
+```
+
 💡 On non-amd64 machines, you may need to add `--platform=linux/amd64`. On most systems, it’s safe to omit it.
 
 ## Code of Conduct
