@@ -4,7 +4,7 @@
 
 package de.telekom.keycloak.authentication.authenticators.client;
 
-import io.prometheus.client.Counter;
+import io.micrometer.core.instrument.Counter;
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.MultivaluedMap;
@@ -25,6 +25,12 @@ import org.keycloak.authentication.authenticators.client.ClientIdAndSecretAuthen
  */
 public class TracingClientIdAndSecretAuthenticator extends ClientIdAndSecretAuthenticator {
     private static final Logger logger = Logger.getLogger(TracingClientIdAndSecretAuthenticator.class);
+    private static final String BASIC_METRIC_NAME = "keycloak_client_auth_method_basic_total";
+    private static final String BASIC_METRIC_DESCRIPTION = "Total number of times basic client authentication method was used";
+    private static final String POST_METRIC_NAME = "keycloak_client_auth_method_post_total";
+    private static final String POST_METRIC_DESCRIPTION = "Total number of times post client authentication method was used";
+    private static final String POSTBASIC_METRIC_NAME = "keycloak_client_auth_method_postbasic_total";
+    private static final String POSTBASIC_METRIC_DESCRIPTION = "Total number of times non-standard basic/post client authentication method was used";
 
     private static final boolean ENABLED = Boolean.parseBoolean(System.getenv("CLIENT_AUTH_METHOD_METRICS_ENABLED"));
 
@@ -32,7 +38,6 @@ public class TracingClientIdAndSecretAuthenticator extends ClientIdAndSecretAuth
     public void init(Config.Scope config) {
         logger.info("Client auth method metrics enabled: " + ENABLED);
         super.init(config);
-        Metrics.INSTANCE.init(); // register metrics to prometheus library
     }
 
     @Override
@@ -56,7 +61,7 @@ public class TracingClientIdAndSecretAuthenticator extends ClientIdAndSecretAuth
                 else if (authMethod == AuthMethod.POSTBASIC) {
                     logger.debugf("Non-standard post/basic client authentication method for client %s in realm %s", client.getClientId(), realmName);
                 }
-                // Report auth method to prometheus metrics
+                // Report auth method to micrometer metrics
                 Metrics.INSTANCE.reportAuthMethod(client.getClientId(), realmName, requestPath, authMethod);
             }
         } catch (Exception e) {
@@ -80,50 +85,42 @@ public class TracingClientIdAndSecretAuthenticator extends ClientIdAndSecretAuth
         } else if (clientIdExists) {
             return AuthMethod.POST;
         } else {
-            // This is an unexpected case, we should always have either auth header or client_id in form data
+            // This is an unexpected case, we should always have either auth header or
+            // client_id in form data
             return null;
         }
     }
 
-    public enum AuthMethod {BASIC, POST, POSTBASIC}
+    public enum AuthMethod {
+        BASIC, POST, POSTBASIC
+    }
 
     /**
-     * Prometheus metrics for client authentication methods
-     * This is a singleton enum to ensure that the metrics are only registered once
+     * Micrometer metrics for client authentication methods.
      */
-    public enum Metrics { //NOSONAR
+    public enum Metrics { // NOSONAR
         INSTANCE;
+
         public static final String LABEL_CLIENT_ID = "client_id";
         public static final String LABEL_REALM = "realm";
         public static final String LABEL_PATH = "path";
-        public void init() {
-            // noop
+
+        private Counter counter(String name, String description, String clientId, String realm, String path) {
+            return Counter.builder(name)
+                    .description(description)
+                    .tag(LABEL_CLIENT_ID, clientId)
+                    .tag(LABEL_REALM, realm)
+                    .tag(LABEL_PATH, path)
+                    .register(io.micrometer.core.instrument.Metrics.globalRegistry);
         }
 
         public void reportAuthMethod(String clientId, String realm, String path, AuthMethod method) {
             final var cnt = switch (method) {
-                case BASIC -> basicAuthMethod.labels(clientId, realm, path);
-                case POST -> postAuthMethd.labels(clientId, realm, path);
-                case POSTBASIC -> postBasicAuthMethod.labels(clientId, realm, path);
+                case BASIC -> counter(BASIC_METRIC_NAME, BASIC_METRIC_DESCRIPTION, clientId, realm, path);
+                case POST -> counter(POST_METRIC_NAME, POST_METRIC_DESCRIPTION, clientId, realm, path);
+                case POSTBASIC -> counter(POSTBASIC_METRIC_NAME, POSTBASIC_METRIC_DESCRIPTION, clientId, realm, path);
             };
-            cnt.inc();
+            cnt.increment();
         }
-
-        private final Counter basicAuthMethod = Counter.build()
-            .name("keycloak_client_auth_method_basic_total")
-            .labelNames(LABEL_CLIENT_ID, LABEL_REALM, LABEL_PATH)
-            .help("Total number of times basic client authentication method was used")
-            .register();
-        private final Counter postAuthMethd = Counter.build()
-            .name("keycloak_client_auth_method_post_total")
-            .labelNames(LABEL_CLIENT_ID, LABEL_REALM, LABEL_PATH)
-            .help("Total number of times post client authentication method was used")
-            .register();
-        private final Counter postBasicAuthMethod = Counter.build()
-            .name("keycloak_client_auth_method_postbasic_total")
-            .labelNames(LABEL_CLIENT_ID, LABEL_REALM, LABEL_PATH)
-            .help("Total number of times non-standard basic/post client authentication method was used")
-            .register();
     }
 }
-

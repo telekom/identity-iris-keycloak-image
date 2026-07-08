@@ -1,7 +1,7 @@
 <!--
 SPDX-FileCopyrightText: 2025 Deutsche Telekom AG
 
-SPDX-License-Identifier: CC0-1.0    
+SPDX-License-Identifier: CC0-1.0
 -->
 
 # Iris Keycloak Image (IKI)
@@ -24,23 +24,17 @@ It's intended to be used with the Helm chart provided in the [gitHub repo](https
 
 ## Extensions
 
-### keycloak-metrics-spi
+### keycloak-metrics-spi (DEPRECATED)
 
 There are the metrics extension used [keycloak-metrics-spi](https://github.com/aerogear/keycloak-metrics-spi).
 The extension has not been modified and is used as is.
 
-When you deploy Keycloak using this image, a new REST endpoint is made
-available: `https://my-keycloak-instance/auth/realms/master/metrics`.  
+When you deploy Keycloak using this image, a new REST endpoint is made available: `https://my-keycloak-instance/auth/realms/master/metrics`.
 From this endpoint you will be able to access all metrics from all(!) realms no matter what realm is in the URL.
 
-(!) This path is not password-protected. To prevent unauthorized access to the metrics the chart blocks the path by
-using ha-proxy
+(!) This path is not password-protected.
 
-To provide the metrics to the monitoring infrastructure HAProxy forwards requests from :9542/metrics to Keycloak
-metrics. You can see how [HAProxy](https://github.com/telekom/iris-charts) configured
-under _templates/configmap-haproxy.yaml_ directory.
-
-![Keycloak Prometheus Integration](img/Keycloak-Prometheus.png "Keycloak Prometheus Integration")
+![Keycloak Prometheus Integration](img/keycloak-prometheus.drawio.png "Keycloak Prometheus Integration")
 
 ## Local development
 
@@ -66,7 +60,7 @@ packages them into the final image — no manual steps required.
 
 This build process includes:
 
-- Building all custom **Keycloak extensions**, such as `keycloak-metrics-spi` and `client-auth-method-spi`
+- Building custom **Keycloak extensions**, such as `keycloak-metrics-spi` and `client-auth-method-spi`
 - Packaging the compiled extensions directly into the final Keycloak image
 
 To run the build:
@@ -82,10 +76,10 @@ it:
 docker build --build-arg BASE_IMAGE_TAG=24.0.2 -t iris .
 ```
 
-By default, all extensions are built, as specified in the Dockerfile (`EXTENSIONS`). If you want to override
+By default, only the `client-auth-method-spi` extension is built, as configured by `EXTENSIONS` in the Dockerfile. To override this behavior:
 
 ```bash
-docker build --build-arg EXTENSIONS="client-auth-method-spi" -t iris .
+docker build --build-arg EXTENSIONS="client-auth-method-spi,keycloak-metrics-spi" -t iris .
 ```
 
 💡 On non-amd64 machines, you may need to add `--platform=linux/amd64`. On most systems, it’s safe to omit it.
@@ -109,7 +103,7 @@ This is automatically checked in CI for both pushes and pull requests.
 
 ### REUSE
 
-The [reuse tool](https://github.com/fsfe/reuse-tool) can be used to verify and establish compliance when new files are added. 
+The [reuse tool](https://github.com/fsfe/reuse-tool) can be used to verify and establish compliance when new files are added.
 
 For more information on the reuse tool visit https://github.com/fsfe/reuse-tool.
 
