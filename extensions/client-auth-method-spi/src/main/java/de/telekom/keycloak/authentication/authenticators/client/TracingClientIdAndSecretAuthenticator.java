@@ -104,23 +104,14 @@ public class TracingClientIdAndSecretAuthenticator extends ClientIdAndSecretAuth
         public static final String LABEL_CLIENT_ID = "client_id";
         public static final String LABEL_REALM = "realm";
         public static final String LABEL_PATH = "path";
-        private final java.util.concurrent.ConcurrentMap<CounterKey, Counter> counters = new java.util.concurrent.ConcurrentHashMap<>();
-
-        private record CounterKey(String name, String clientId, String realm, String path) {
-        }
 
         private Counter counter(String name, String description, String clientId, String realm, String path) {
-            final CounterKey key = new CounterKey(
-                    name,
-                    clientId,
-                    realm,
-                    path);
-            return counters.computeIfAbsent(key, unused -> Counter.builder(name)
+            return Counter.builder(name)
                     .description(description)
                     .tag(LABEL_CLIENT_ID, clientId)
                     .tag(LABEL_REALM, realm)
                     .tag(LABEL_PATH, path)
-                    .register(io.micrometer.core.instrument.Metrics.globalRegistry));
+                    .register(io.micrometer.core.instrument.Metrics.globalRegistry);
         }
 
         public void reportAuthMethod(String clientId, String realm, String path, AuthMethod method) {
