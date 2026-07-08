@@ -4,6 +4,13 @@ SPDX-FileCopyrightText: 2025 Deutsche Telekom AG
 SPDX-License-Identifier: CC0-1.0    
 -->
 
+## [1.5.1](https://github.com/telekom/identity-iris-keycloak-image/compare/1.5.0...1.5.1) (2026-07-08)
+
+
+### Bug Fixes
+
+* expose client-auth-method-spi metrics over mgmt port ([#21](https://github.com/telekom/identity-iris-keycloak-image/issues/21)) ([a53d8ed](https://github.com/telekom/identity-iris-keycloak-image/commit/a53d8ede039adb0703e0745d5dbc2c80bed0dc5c))
+
 # [1.5.0](https://github.com/telekom/identity-iris-keycloak-image/compare/1.4.1...1.5.0) (2026-05-04)
 
 
