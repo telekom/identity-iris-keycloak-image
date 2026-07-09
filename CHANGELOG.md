@@ -4,6 +4,13 @@ SPDX-FileCopyrightText: 2025 Deutsche Telekom AG
 SPDX-License-Identifier: CC0-1.0    
 -->
 
+## [1.5.2](https://github.com/telekom/identity-iris-keycloak-image/compare/1.5.1...1.5.2) (2026-07-09)
+
+
+### Bug Fixes
+
+* **ci:** use static build revision ([#22](https://github.com/telekom/identity-iris-keycloak-image/issues/22)) ([450ba94](https://github.com/telekom/identity-iris-keycloak-image/commit/450ba947c7e11d180dbcc79c0831bff19c866258))
+
 ## [1.5.1](https://github.com/telekom/identity-iris-keycloak-image/compare/1.5.0...1.5.1) (2026-07-08)
 
 
