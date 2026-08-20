@@ -52,6 +52,7 @@ RUN /opt/keycloak/bin/kc.sh build \
     --feature-persistent-user-sessions=disabled \
     --feature-recovery-codes=disabled \
     --feature-step-up-authentication=disabled \
+    --feature-step-up-authentication-saml=disabled \
     --feature-token-exchange-standard=disabled \
     --feature-update-email=disabled \
     --feature-web-authn=disabled \
