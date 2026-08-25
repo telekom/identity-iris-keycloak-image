@@ -5,7 +5,7 @@
 # Keycloak version set in gitlab-ci
 ARG BASE_IMAGE_TAG=26.7.2
 
-FROM eclipse-temurin:21.0.10_7-jdk-alpine-3.23 AS extensionbuilder
+FROM eclipse-temurin:21.0.11_10-jdk-alpine-3.23 AS extensionbuilder
 
 # Need to declare it again here, so we can pass it to build.sh
 ARG BASE_IMAGE_TAG
