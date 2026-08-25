@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 # Keycloak version set in gitlab-ci
-ARG BASE_IMAGE_TAG=26.5.7
+ARG BASE_IMAGE_TAG=26.7.2
 
 FROM eclipse-temurin:21.0.10_7-jdk-alpine-3.23 AS extensionbuilder
 
@@ -52,6 +52,7 @@ RUN /opt/keycloak/bin/kc.sh build \
     --feature-persistent-user-sessions=disabled \
     --feature-recovery-codes=disabled \
     --feature-step-up-authentication=disabled \
+    --feature-step-up-authentication-saml=disabled \
     --feature-token-exchange-standard=disabled \
     --feature-update-email=disabled \
     --feature-web-authn=disabled \
